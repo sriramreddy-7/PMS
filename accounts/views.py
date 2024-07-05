@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate, login as auth_login, logout
 from django.contrib.auth.decorators import login_required
 from .models import RecruiterProfile, InstituteProfile, Profile, StudentProfile,JobOpening, InstituteProfile,JobApplication,Request
 import pandas as pd
-
+from django.db.models import Q
 # Create your views here.
 def index(request):
     return render(request, 'index.html')
@@ -455,8 +455,6 @@ def view_institute_profile(request):
 
 
 
-
-
 @login_required
 def recruiter_dashboard(request):
     # Retrieve all available institute
@@ -468,6 +466,7 @@ def recruiter_dashboard(request):
         'institutes': institutes,
     }
     return render(request, 'recruiter/dashboard.html', context)
+
 @login_required
 def send_request(request, institute_id):
     if request.method == 'POST':
@@ -475,18 +474,33 @@ def send_request(request, institute_id):
         institute = get_object_or_404(InstituteProfile, pk=institute_id)
         request_type = 'recruiter_to_institute'
         
-        # Create a new request
-        request_obj = Request.objects.create(
+        # Check if a similar request already exists
+        existing_request = Request.objects.filter(
+            Q(sender=request.user, receiver=institute.user) |
+            Q(sender=institute.user, receiver=request.user),
             request_type=request_type,
-            sender=request.user,
-            receiver=institute.user,
             status='pending'
-        )
-        messages.success(request, 'Request sent successfully.')
+        ).exists()
+        
+        if existing_request:
+            messages.warning(request, 'Request already sent. Please wait for a response.')
+        else:
+            # Create a new request
+            request_obj = Request.objects.create(
+                request_type=request_type,
+                sender=request.user,
+                receiver=institute.user,
+                status='pending'
+            )
+            messages.success(request, 'Request sent successfully.')
+        
         return redirect('recruiter_dashboard')
 
 @login_required
 def institute_requests(request):
+    if request.user.profile.role != 'institute':
+        messages.error(request, 'You do not have permission to access this page.')
+        return redirect('login')
     institute_profile = request.user.institute_profile  # Assuming institute profile is linked to User
     received_requests = Request.objects.filter(receiver=request.user)
     context = {
@@ -510,13 +524,101 @@ def manage_request(request, request_id):
         return redirect('institute_requests')
 
 @login_required
-def view_shared_student(request, student_id):
-    student = get_object_or_404(StudentProfile, pk=student_id)
-    # Add logic to ensure only authorized recruiters can view shared details
+def institute_list(request):
+    if request.user.profile.role != 'recruiter':
+        messages.error(request, 'You do not have permission to access this page.')
+        return redirect('login')
+    
+    # Fetch all accepted requests for the current recruiter
+    accepted_requests = Request.objects.filter(sender=request.user, status='accepted')
+    
+    # Use a set to store unique institutes
+    unique_institutes = set()
+    institute_list = []
+    
+    for req in accepted_requests:
+        institute = req.receiver.institute_profile
+        
+        # Check if institute already exists in set, skip if it does
+        if institute.id in unique_institutes:
+            continue
+        
+        # Add institute id to set to mark it as processed
+        unique_institutes.add(institute.id)
+        
+        # Calculate shared student count
+        shared_students_count = StudentProfile.objects.filter(institute=institute).count()
+        is_accepted = req.status == 'accepted'
+        
+        institute_list.append({
+            'id': institute.id,
+            'name': institute.institute_name,
+            'accepted': is_accepted,
+            'shared_students_count': shared_students_count,
+        })
+    
+    context = {
+        'institute_list': institute_list,
+    }
+    return render(request, 'recruiter/institute_list.html', context)
+
+
+
+
+
+
+@login_required
+def view_shared_students(request, institute_id):
+    # Ensure only recruiters can access this view
+    if request.user.profile.role != 'recruiter':
+        messages.error(request, 'You do not have permission to access this page.')
+        return redirect('login')
+    
+    institute = get_object_or_404(InstituteProfile, pk=institute_id)
+    
+    # accepted_requests = Request.objects.filter(receiver=request.user, status='accepted')
+    
+    # shared_students = StudentProfile.objects.filter(
+    #     institute=institute,
+    #     id__in=[req.sender.student_profile.id for req in accepted_requests]
+    # )
+    shared_students = StudentProfile.objects.filter(institute=institute)
+    
+    context = {
+        'institute': institute,
+        'shared_students': shared_students,
+    }
+    return render(request, 'recruiter/view_shared_students.html', context)
+
+
+
+@login_required
+def list_shared_students(request):
+    if request.user.profile.role != 'recruiter':
+        messages.error(request, 'You do not have permission to access this page.')
+        return redirect('login')
+    
+    recruiter = request.user.recruiter_profile  # Assuming recruiter profile is linked to User
+    accepted_requests = Request.objects.filter(sender=request.user, status='accepted')
+    students = StudentProfile.objects.filter(institute__in=[req.receiver.institute_profile for req in accepted_requests])
+    
+    context = {
+        'students': students,
+    }
+    return render(request, 'recruiter/list_shared_students.html', context)
+
+
+@login_required
+def recruiter_student_profile(request, username):
+    # Ensure only recruiters can access this view
+    if request.user.profile.role != 'recruiter':
+        messages.error(request, 'You do not have permission to access this page.')
+        return redirect('login')
+    
+    # Retrieve the student profile
+    student = get_object_or_404(StudentProfile, user__username=username)
+    
     context = {
         'student': student,
     }
-    return render(request, 'recruiter/view_shared_student.html', context)
-
-
-
+    return render(request, 'recruiter/recruiter_student_profile.html', context)

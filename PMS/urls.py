@@ -51,7 +51,12 @@ urlpatterns = [
     path('send_request/<int:institute_id>/', views.send_request, name='send_request'),
     path('requests/', views.institute_requests, name='institute_requests'),
     path('manage_request/<int:request_id>/', views.manage_request, name='manage_request'),
-    path('view_shared_student/<int:student_id>/', views.view_shared_student, name='view_shared_student'),
+    
+    
+    path('institute_list', views.institute_list, name='institute_list'),
+    path('list_shared_students/', views.list_shared_students, name='list_shared_students'),
+    path('view_shared_students/<int:institute_id>/', views.view_shared_students, name='view_shared_students'),
+    path('recruiter_student_profile/<str:username>/', views.recruiter_student_profile, name='recruiter_student_profile'),
 
     
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

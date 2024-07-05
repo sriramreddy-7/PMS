@@ -10,7 +10,14 @@
     <div class="row">
         <div class="col-12">
             <h2>Received Requests</h2>
-            <table class="table table-striped">
+            <div class="mb-3">
+                <label for="displayOption" class="form-label">Display Option:</label>
+                <select id="displayOption" class="form-select" onchange="toggleRequests(this.value)">
+                    <option value="unique">Show Unique Requests</option>
+                    <option value="all">Show All Requests</option>
+                </select>
+            </div>
+            <table id="requestsTable" class="table table-striped">
                 <thead>
                     <tr>
                         <th>Recruiter</th>
@@ -20,13 +27,18 @@
                 </thead>
                 <tbody>
                     {% for request in requests %}
-                    <tr>
+                    {% if not request.is_duplicate %}
+                    <tr class="unique-request">
+                    {% else %}
+                    <tr class="all-requests">
+                    {% endif %}
                         <td>{{ request.sender.recruiter_profile.organization_name }}</td>
                         <td>{{ request.get_status_display }}</td>
                         <td>
                             {% if request.status == 'pending' %}
                             <form action="{% url 'manage_request' request.id %}" method="post">
                                 {% csrf_token %}
+                                <input type="hidden" name="request_id" value="{{ request.id }}">
                                 <button type="submit" name="action" value="accept" class="btn btn-success">Accept</button>
                                 <button type="submit" name="action" value="decline" class="btn btn-danger">Decline</button>
                             </form>
@@ -35,10 +47,32 @@
                             {% endif %}
                         </td>
                     </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="3">No requests found.</td>
+                    </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
     </div>
 </div>
+
+<script>
+    function toggleRequests(option) {
+        if (option === 'unique') {
+            $('.all-requests').hide();
+            $('.unique-request').show();
+        } else {
+            $('.all-requests').show();
+            $('.unique-request').show();
+        }
+    }
+    
+    // Initial toggle based on default selection
+    $(document).ready(function() {
+        toggleRequests($('#displayOption').val());
+    });
+</script>
+
 {% endblock %}

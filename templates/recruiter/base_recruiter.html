@@ -44,26 +44,36 @@
                 <nav class="mt-2">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                         data-accordion="false">
-                       
                         <li class="nav-item">
-    <a href="{% url 'recruiter_dashboard' %}" class="nav-link">
-        <i class="nav-icon fas fa-tachometer-alt"></i>
-        <p>Dashboard</p>
-    </a>
-</li>
-<li class="nav-item">
-    <a href="" class="nav-link">
-        <i class="nav-icon fas fa-briefcase"></i>
-        <p>Job Postings</p>
-    </a>
-</li>
-<li class="nav-item">
-    <a href="" class="nav-link">
-        <i class="nav-icon fas fa-envelope"></i>
-        <p>Requests</p>
-    </a>
-</li>
-
+                            <a href="{% url 'recruiter_dashboard' %}" class="nav-link">
+                                <i class="nav-icon fas fa-tachometer-alt"></i>
+                                <p>Dashboard</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="" class="nav-link">
+                                <i class="nav-icon fas fa-briefcase"></i>
+                                <p>Job Postings</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="" class="nav-link">
+                                <i class="nav-icon fas fa-envelope"></i>
+                                <p>Requests</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'institute_list'  %}" class="nav-link">
+                                <i class="nav-icon fas fa-user"></i>
+                                <p>Institute list</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'list_shared_students' %}" class="nav-link">
+                                <i class="nav-icon fas fa-envelope"></i>
+                                <p>Shared Details</p>
+                            </a>
+                        </li>
                         
                     </ul>
                 </nav>
@@ -73,10 +83,7 @@
         <div class="content-wrapper">
             <div class="content-header">
                 <div class="container-fluid">
-                    
-                    
-                            <!-- <h1 class="m-0">{% block header %}Dashboard{% endblock %}</h1> -->
-                      
+                    <!-- <h1 class="m-0">{% block header %}Dashboard{% endblock %}</h1> -->
                 </div>
             </div>
 
@@ -101,8 +108,6 @@
                 </div>
             </section>
         </div>
-
-       
     </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>

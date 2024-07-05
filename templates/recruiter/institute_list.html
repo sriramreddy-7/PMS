@@ -1,0 +1,38 @@
+<!-- institute_list.html -->
+{% extends 'recruiter/base_recruiter.html' %}
+
+{% block title %}List of Institutes{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>List of Institutes</h2>
+    <div class="card mt-3">
+        <div class="card-body">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Institute Name</th>
+                        <th>Status</th>
+                        <th>Shared Students Count</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for institute in institute_list %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ institute.name }}</td>
+                        <td>{% if institute.accepted %}<span class="badge badge-success">Accepted</span>{% else %}<span class="badge badge-warning">Not Accepted</span>{% endif %}</td>
+                        <td>{{ institute.shared_students_count }}</td>
+                        <td>
+                            <a href="{% url 'view_shared_students' institute.id %}" class="btn btn-primary">View Shared Students</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

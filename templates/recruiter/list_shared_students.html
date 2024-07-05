@@ -1,0 +1,39 @@
+<!-- recruiter/templates/recruiter/list_shared_students.html -->
+
+{% extends 'recruiter/base_recruiter.html' %}
+
+{% block title %}List of Shared Students{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>List of Shared Students</h2>
+    <div class="card">
+        <div class="card-body">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Contact Number</th>
+                        <th>Institute</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for student in students %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ student.user.first_name }} {{ student.user.last_name }}</td>
+                        <td>{{ student.contact_number }}</td>
+                        <td>{{ student.institute.institute_name }}</td>
+                        <td>
+                            <a href="{% url 'view_shared_student' student.id %}" class="btn btn-primary">View Profile</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
