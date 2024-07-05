@@ -1,0 +1,56 @@
+<!-- institute_job_applications.html -->
+
+{% extends 'institute/base_institute.html' %}
+{% load static %}
+
+{% block title %}Job Applications - {{ job.title }}{% endblock %}
+
+{% block content %}
+<main class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card border-0 shadow">
+                    <div class="card-body">
+                        <h2 class="h5 mb-4">Job Applications - {{ job.title }}</h2>
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Student Name</th>
+                                        <th>Email</th>
+                                        <th>Contact Number</th>
+                                        <th>Resume</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for application in applications %}
+                                        <tr>
+                                            <td>{{ application.student.user.get_full_name }}</td>
+                                            <td>{{ application.student.user.email }}</td>
+                                            <td>{{ application.student.contact_number }}</td>
+                                            <td>
+                                                {% if application.student.resume %}
+                                                    <a href="{{ application.student.resume.url }}" class="btn btn-primary" target="_blank">View Resume</a>
+                                                {% else %}
+                                                    No Resume Uploaded
+                                                {% endif %}
+                                            </td>
+                                            <td>{{ application.get_status_display }}</td>
+                                        </tr>
+                                    {% empty %}
+                                        <tr>
+                                            <td colspan="5">No applications for this job yet.</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}

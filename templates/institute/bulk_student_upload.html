@@ -1,0 +1,128 @@
+{% extends 'Institute/base_institute.html' %}
+
+{% block title %}Institute Dashboard{% endblock %}
+
+{% block brand %}Institute Dashboard{% endblock %}
+
+{% block user_name %}{{ request.user.username }}{% endblock %}
+
+{% block sidebar %}
+    {{ block.super }}
+    <!-- Add additional sidebar items specific to Institute here if needed -->
+{% endblock %}
+
+{% block header %}Institute Dashboard{% endblock %}
+
+{% block content %}
+<main class="content">
+    <div class="container-fluid mt-4">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card border-0 shadow">
+                    <div class="card-body">
+                        <h2 class="h5 mb-4">Upload CSV File</h2>
+                        <form id="upload-csv-form" method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label for="formFile" class="form-label">Choose CSV File</label>
+                                <input class="form-control" type="file" name="csv_file" id="formFile" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="password" class="form-label">Password</label>
+                                <input class="form-control" type="text" name="password" id="password" required>
+                            </div>
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-primary">Upload</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Loading bar -->
+                <div id="loading-bar" style="display: none;">
+                    <div class="progress mb-3">
+                        <div id="progress-bar" class="progress-bar progress-bar-striped progress-bar-animated bg-primary" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <p>Uploading and processing data...</p>
+                </div>
+
+                <!-- Messages -->
+                {% if messages %}
+                    <div class="mb-3">
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }}">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                {% if error_message %}
+                    <div class="alert alert-danger mb-3">
+                        {{ error_message }}
+                    </div>
+                {% endif %}
+
+                <!-- Display uploaded data -->
+                {% if data %}
+                    <hr>
+                    <h2 class="h5 mb-4 text-center">Uploaded CSV Data</h2>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Email</th>
+                                    <th>First Name</th>
+                                    <th>Last Name</th>
+                                    <th>Username</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for row in data %}
+                                    <tr>
+                                        <td>{{ row.Email }}</td>
+                                        <td>{{ row.First_Name }}</td>
+                                        <td>{{ row.Last_Name }}</td>
+                                        <td>{{ row.Username }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</main>
+
+<script>
+    document.getElementById('upload-csv-form').addEventListener('submit', function() {
+        // Show loading bar
+        document.getElementById('loading-bar').style.display = 'block';
+
+        // Simulate progress (adjust as needed based on actual processing time)
+        let progress = 0;
+        const interval = setInterval(function() {
+            progress += 10; // Increase progress
+            document.getElementById('progress-bar').style.width = progress + '%';
+            document.getElementById('progress-bar').setAttribute('aria-valuenow', progress);
+
+            if (progress >= 100) {
+                clearInterval(interval); // Stop progress simulation
+            }
+        }, 500); // Adjust interval timing as needed
+    });
+</script>
+
+<style>
+    /* Customize the loading bar style */
+    #loading-bar {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    .progress {
+        height: 20px; /* Adjust height as needed */
+    }
+</style>
+{% endblock %}

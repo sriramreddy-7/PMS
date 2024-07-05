@@ -1,0 +1,95 @@
+{% extends 'institute/base_institute.html' %}
+
+{% block title %}Student Details{% endblock %}
+{% block brand %}Institute Dashboard{% endblock %}
+{% block user_name %}{{ institute_profile.institute_name }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#studentTable').DataTable();
+    });
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Student Details</h3>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body">
+                    {% if students %}
+                    <table id="studentTable" class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Hall Ticket</th>
+                                <th>Student Name</th>
+                                <th>Email</th>
+                                <th>Contact Number</th>
+                                <th>Degree</th>
+                                <th>Branch & Sp</th>
+                                <th>Pass Out</th>
+                                <th>Resume</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for student in students %}
+                            <tr>
+                                <td><a
+                                        href="{% url 'student_profile' student.user.username %}"><u>{{ student.user.username }}</u></a>
+                                </td>
+                                <td>{{ student.user.get_full_name }}</td>
+                                <td>{{ student.user.email }}</td>
+                                <td>{{ student.contact_number }}</td>
+                                <td>{{ student.degree }}</td>
+                                <td>{{ student.branch_specialization }}</td>
+                                <td>{{ student.year_of_passout }}</td>
+                                <!-- <td>
+                                    {% if student.resume %}
+                                    <a href="{{ student.resume.url }}" class="btn btn-primary" target="_blank">
+                                        <i class="fas fa-file-alt"></i>
+                                    </a>
+                                    {% else %}
+                                    <button class="btn btn-danger" disabled>
+                                        <i class="fas fa-file-alt"></i>
+                                    </button>
+                                    {% endif %}
+                                </td>    -->
+                                <td>
+                                    {% if student.resume %}
+                                    <a href="{{ student.resume.url }}" class="btn btn-primary" target="_blank">
+                                        <i class="fas fa-file-alt"></i>
+                                    </a>
+                                    {% else %}
+                                    <button class="btn btn-danger" disabled>
+                                        <i class="fas fa-file-alt"></i>
+                                    </button>
+                                    {% endif %}
+                                </td>
+
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% else %}
+                    <p>No students found for this institute.</p>
+                    {% endif %}
+                </div>
+                <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+        </div>
+        <!-- /.col -->
+    </div>
+    <!-- /.row -->
+</div>
+{% endblock %}

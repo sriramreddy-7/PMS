@@ -1,0 +1,38 @@
+{% extends 'student/base_student.html' %}
+
+{% block title %}Job Openings{% endblock %}
+
+{% block content %}
+<main class="content">
+    <div class="container-fluid mt-0">
+        <div class="row">
+            <div class="col-lg-12">
+                <h2 class="h5 mb-4">Job Postings</h2>
+                <div class="row">
+                    {% for job in job_openings %}
+                        <div class="col-md-12 mb-3">
+                            <div class="card">
+                                <div class="row no-gutters">
+                                    <!-- <div class="col-md-4">
+                                        <img src="path_to_some_image.jpg" class="card-img" alt="Job Image">
+                                    </div> -->
+                                    <div class="col-md-8">
+                                        <div class="card-body">
+                                            <h5 class="card-title">{{ job.company }} - {{ job.title }}</h5>
+                                            <p class="card-text">{{ job.description|truncatewords:30 }}</p>
+                                            <p class="card-text"><small class="text-muted">Posted on: {{ job.posted_date }}</small></p>
+                                            <p class="card-text"><small class="text-muted">Deadline: {{ job.deadline }}</small></p>
+                                            <p class="card-text"><small class="text-muted">Type: {{ job.get_job_type_display }}</small></p>
+                                            <a href="{{ job.post }}" class="btn btn-primary" target="_blank">View Job</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}

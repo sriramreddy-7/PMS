@@ -1,0 +1,60 @@
+{% extends 'institute/base_institute.html' %}
+
+{% block title %}Student Off-Campus Jobs Status{% endblock %}
+
+{% block content %}
+<main class="content">
+    <div class="container-fluid mt-4">
+        <div class="row">
+            <div class="col-lg-12">
+                <h2 class="h5 mb-4">Student Off-Campus Jobs Status</h2>
+
+                {% if companies %}
+                    {% for company, applications in companies.items %}
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h5 class="card-title">{{ company }}</h5>
+                            </div>
+                            <div class="card-body">
+                                <table class="table table-bordered">
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th>Application ID</th>
+                                            <th>Job Title</th>
+                                            <th>Status</th>
+                                            <th>Update Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for application in applications %}
+                                            <tr>
+                                                <td>{{ application.id }}</td>
+                                                <td>{{ application.job_opening.title }}</td>
+                                                <td>{{ application.get_status_display }}</td>
+                                                <td>
+                                                    <form method="post" style="display:inline;">
+                                                        {% csrf_token %}
+                                                        <input type="hidden" name="application_id" value="{{ application.id }}">
+                                                        <select name="status" class="form-control form-control-sm" style="width:auto; display:inline;">
+                                                            <option value="pending" {% if application.status == 'pending' %}selected{% endif %}>Pending</option>
+                                                            <option value="accepted" {% if application.status == 'accepted' %}selected{% endif %}>Accepted</option>
+                                                            <option value="rejected" {% if application.status == 'rejected' %}selected{% endif %}>Rejected</option>
+                                                        </select>
+                                                        <button type="submit" class="btn btn-sm btn-primary">Update</button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p>No job applications found.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}

@@ -1,0 +1,87 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title %}Institute Dashboard{% endblock %}
+{% block brand %}Institute Dashboard{% endblock %}
+{% block user_name %}Institute Name{% endblock %}
+
+{% block sidebar %}
+<li class="nav-item">
+    <a href="#" class="nav-link">
+        <i class="nav-icon fas fa-tachometer-alt"></i>
+        <p>
+            Dashboard
+        </p>
+    </a>
+</li>
+<li class="nav-item">
+    <a href="{% url 'bulk_student_upload' %}" class="nav-link">
+        <i class="nav-icon fas fa-users"></i>
+        <p>
+            Bull Students Upload
+        </p>
+    </a>
+</li>
+<li class="nav-item">
+    <a href="#" class="nav-link">
+        <i class="nav-icon fas fa-envelope"></i>
+        <p>
+            Requests
+        </p>
+    </a>
+</li>
+{% endblock %}
+
+{% block header %}Institute Dashboard{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-3 col-6">
+        <div class="small-box bg-info">
+            <div class="inner">
+                <h3>20</h3>
+                <p>Students Registered</p>
+            </div>
+            <div class="icon">
+                <i class="ion ion-bag"></i>
+            </div>
+            <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+        </div>
+    </div>
+    <div class="col-lg-3 col-6">
+        <div class="small-box bg-success">
+            <div class="inner">
+                <h3>15</h3>
+                <p>Requests Received</p>
+            </div>
+            <div class="icon">
+                <i class="ion ion-stats-bars"></i>
+            </div>
+            <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+        </div>
+    </div>
+    <div class="col-lg-3 col-6">
+        <div class="small-box bg-warning">
+            <div class="inner">
+                <h3>10</h3>
+                <p>Requests Approved</p>
+            </div>
+            <div class="icon">
+                <i class="ion ion-person-add"></i>
+            </div>
+            <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+        </div>
+    </div>
+    <div class="col-lg-3 col-6">
+        <div class="small-box bg-danger">
+            <div class="inner">
+                <h3>5</h3>
+                <p>Pending Approvals</p>
+            </div>
+            <div class="icon">
+                <i class="ion ion-pie-graph"></i>
+            </div>
+            <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+        </div>
+    </div>
+</div>
+{% endblock %}

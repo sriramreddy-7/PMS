@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recruiter Dashboard</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Custom CSS -->
+  <style>
+    /* Custom styles to complement project branding */
+    body {
+      background-color: #ffffff; /* Background color */
+      color: #1F2937; /* Text color */
+      font-family: Arial, sans-serif;
+    }
+    .navbar {
+      background-color: #1F2937; /* Navbar background color */
+      color: #F0BC74; /* Navbar text color */
+    }
+    .card {
+      background-color: #F0BC74; /* Card background color */
+      color: #1F2937; /* Card text color */
+    }
+    .btn-custom {
+      background-color: #1F2937; /* Button background color */
+      color: #F0BC74; /* Button text color */
+      border-color: #1F2937; /* Button border color */
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <a class="navbar-brand" href="#">Recruiter Dashboard</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+          <a class="nav-link" href="#">Dashboard <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Job Postings</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Applications</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Candidates</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Reports</a>
+        </li>
+      </ul>
+      <form class="form-inline my-2 my-lg-0">
+        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Search</button>
+      </form>
+    </div>
+  </nav>
+
+  <!-- Page Content -->
+  <div class="container mt-4">
+    <div class="row">
+      <div class="col-lg-4 mb-4">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Job Postings</h5>
+            <p class="card-text">Manage job postings and applications.</p>
+            <a href="#" class="btn btn-custom">Manage Postings</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 mb-4">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Applications</h5>
+            <p class="card-text">Review and track candidate applications.</p>
+            <a href="#" class="btn btn-custom">View Applications</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 mb-4">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Candidates</h5>
+            <p class="card-text">Browse and manage candidate profiles.</p>
+            <a href="#" class="btn btn-custom">Manage Candidates</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Additional Recruiter-specific sections can be added here -->
+  </div>
+
+  <!-- Bootstrap JS and dependencies -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

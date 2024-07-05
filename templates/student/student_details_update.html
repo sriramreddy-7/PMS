@@ -1,0 +1,75 @@
+{% extends 'student/base_student.html' %}
+
+{% block title %}Student Dashboard{% endblock %}
+{% block brand %}Student Dashboard{% endblock %}
+
+{% block header %}Student Dashboard{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Update Profile</h3>
+                </div>
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="first_name">First Name</label>
+                            <input type="text" class="form-control" id="first_name" name="first_name" value="{{ student.user.first_name }}" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label for="last_name">Last Name</label>
+                            <input type="text" class="form-control" id="last_name" name="last_name" value="{{ student.user.last_name }}" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label for="username">Username</label>
+                            <input type="text" class="form-control" id="username" name="username" value="{{ student.user.username }}" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" value="{{ student.user.email }}" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label for="contact_number">Contact Number</label>
+                            <input type="text" class="form-control" id="contact_number" name="contact_number" value="{{ student.contact_number }}">
+                        </div>
+                        <div class="form-group">
+                            <label for="resume">Resume</label>
+                            {% if student.resume %}
+                                <p><a href="{{ student.resume.url }}" target="_blank">View Resume</a></p>
+                            {% else %}
+                                <input type="file" id="resume" name="resume" class="form-control-file">
+                            {% endif %}
+                        </div>
+                        <div class="form-group">
+                            <label for="degree">Degree</label>
+                            <input type="text" class="form-control" id="degree" name="degree" value="{{ student.degree }}">
+                        </div>
+                        <div class="form-group">
+                            <label for="branch_specialization">Branch Specialization</label>
+                            <input type="text" class="form-control" id="branch_specialization" name="branch_specialization" value="{{ student.branch_specialization }}">
+                        </div>
+                        <div class="form-group">
+                            <label for="year_of_passout">Year of Passout</label>
+                            <input type="number" class="form-control" id="year_of_passout" name="year_of_passout" value="{{ student.year_of_passout }}">
+                        </div>
+                        <div class="form-group">
+                            <label for="profile_picture">Profile Picture</label>
+                            <input type="file" class="form-control-file" id="profile_picture" name="profile_picture">
+                            {% if student.profile_picture %}
+                                <small class="form-text text-muted">Current Picture: <a href="{{ student.profile_picture.url }}" target="_blank">View</a></small>
+                            {% endif %}
+                        </div>
+                        <button type="submit" class="btn btn-primary">Update</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+        </div>
+    </div>
+</div>
+{% endblock %}

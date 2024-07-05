@@ -1,0 +1,75 @@
+{% extends 'Student/base_student.html' %}
+
+{% block title %}My Job Applications{% endblock %}
+
+{% block content %}
+<main class="content">
+    <div class="container-fluid mt-0">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="h5 mb-4">My Job Applications</h2>
+
+                        <!-- Form to add new job application -->
+                        <form method="post" class="mb-4">
+                            {% csrf_token %}
+                            <div class="form-row">
+                                <div class="form-group col-md-8">
+                                    <label for="new_job_opening">Add New Job Application</label>
+                                    <select id="new_job_opening" name="new_job_opening" class="form-control">
+                                        <option value="" disabled selected>Select Job Opening</option>
+                                        {% for job in job_openings %}
+                                            <option value="{{ job.id }}">{{ job.title }} - {{ job.company }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-4 align-self-end">
+                                    <button type="submit" class="btn btn-primary">Add Application</button>
+                                </div>
+                            </div>
+                        </form>
+
+                        <!-- Table of job applications -->
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th>Application ID</th>
+                                        <th>Job Title</th>
+                                        <th>Company</th>
+                                        <th>Status</th>
+                                        <th>Update Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for application in applications %}
+                                        <tr>
+                                            <td>{{ application.id }}</td>
+                                            <td>{{ application.job_opening.title }}</td>
+                                            <td>{{ application.job_opening.company }}</td>
+                                            <td>{{ application.get_status_display }}</td>
+                                            <td>
+                                                <form method="post" style="display:inline;">
+                                                    {% csrf_token %}
+                                                    <input type="hidden" name="application_id" value="{{ application.id }}">
+                                                    <select name="status" class="form-control form-control-sm" style="width:auto; display:inline;">
+                                                        <option value="pending" {% if application.status == 'pending' %}selected{% endif %}>Pending</option>
+                                                        <option value="accepted" {% if application.status == 'accepted' %}selected{% endif %}>Accepted</option>
+                                                        <option value="rejected" {% if application.status == 'rejected' %}selected{% endif %}>Rejected</option>
+                                                    </select>
+                                                    <button type="submit" class="btn btn-sm btn-primary">Update</button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}

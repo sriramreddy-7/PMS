@@ -1,0 +1,73 @@
+{% extends 'student/base_student.html' %}
+
+{% block title %}Student Dashboard{% endblock %}
+{% block brand %}Student Dashboard{% endblock %}
+
+{% block header %}Student Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                {% if student.profile_picture %}
+                    <img src="{{ student.profile_picture.url }}" class="card-img-top" alt="Profile Picture">
+                {% else %}
+                    <img src="https://via.placeholder.com/150" class="card-img-top" alt="No Profile Picture">
+                {% endif %}
+                <div class="card-body">
+    <h5 class="card-title">{{ student.user.first_name }} {{ student.user.last_name }}</h5>
+    <p class="card-text"><strong>Email:</strong> {{ student.user.email }}</p>
+    <a href="{% url 'student_details_update' %}" class="btn btn-primary">
+        <i class="fas fa-edit"></i> Edit Profile
+    </a>
+</div>
+
+            </div>
+        </div>
+        <div class="col-md-8">
+            <h3>Student Details</h3>
+            <table class="table table-striped">
+                <tr>
+                    <th>Contact Number</th>
+                    <td>{{ student.contact_number }}</td>
+                </tr>
+                <!-- <tr>
+                    <th>Education</th>
+                    <td>{{ student.education }}</td>
+                </tr> -->
+                <tr>
+                    <th>Degree</th>
+                    <td>{{ student.degree }}</td>
+                </tr>
+                <tr>
+                    <th>Branch Specialization</th>
+                    <td>{{ student.branch_specialization }}</td>
+                </tr>
+                <tr>
+                    <th>Year of Passout</th>
+                    <td>{{ student.year_of_passout }}</td>
+                </tr>
+                <tr>
+                    <th>Institute</th>
+                    <td>{{ student.institute.institute_name }}</td>
+                </tr>
+                <tr>
+                    <th>Resume</th>
+                    <td>
+                                    {% if student.resume %}
+                                    <a href="{{ student.resume.url }}" class="btn btn-primary" target="_blank">
+                                        <i class="fas fa-file-alt"></i>
+                                    </a>
+                                    {% else %}
+                                    <button class="btn btn-danger" disabled>
+                                        <i class="fas fa-file-alt"></i>
+                                    </button>
+                                    {% endif %}
+                                </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
