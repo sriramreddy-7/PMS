@@ -18,13 +18,13 @@
                     <a class="nav-link" data-widget="pushmenu" href="#"><i class="fas fa-bars"></i></a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
-                    <a href="{% url 'index' %}" class="nav-link">Home</a>
+                    <a href="{% url 'recruiter_dashboard' %}" class="nav-link">Home</a>
                 </li>
             </ul>
         </nav>
 
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
-            <a href="{% url 'index' %}" class="brand-link">
+            <a href="{% url 'recruiter_dashboard' %}" class="brand-link">
                 <img src="https://adminlte.io/themes/v3/dist/img/AdminLTELogo.png" alt="AdminLTE Logo"
                     class="brand-image img-circle elevation-3" style="opacity: .8">
                 <span class="brand-text font-weight-light">{% block brand %}Dashboard{% endblock %}</span>
@@ -37,23 +37,34 @@
                             alt="User Image">
                     </div>
                     <div class="info">
-                        <a href="#" class="d-block">{% block user_name %}User Name{% endblock %}</a>
+                        <a href="{% url 'recruiter_dashboard' %}" class="d-block">{{ request.user.first_name }} {{ request.user.last_name }}</a>
                     </div>
                 </div>
 
                 <nav class="mt-2">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                         data-accordion="false">
-                        {% block sidebar %}
+                       
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-tachometer-alt"></i>
-                                <p>
-                                    Dashboard
-                                </p>
-                            </a>
-                        </li>
-                        {% endblock %}
+    <a href="{% url 'recruiter_dashboard' %}" class="nav-link">
+        <i class="nav-icon fas fa-tachometer-alt"></i>
+        <p>Dashboard</p>
+    </a>
+</li>
+<li class="nav-item">
+    <a href="" class="nav-link">
+        <i class="nav-icon fas fa-briefcase"></i>
+        <p>Job Postings</p>
+    </a>
+</li>
+<li class="nav-item">
+    <a href="" class="nav-link">
+        <i class="nav-icon fas fa-envelope"></i>
+        <p>Requests</p>
+    </a>
+</li>
+
+                        
                     </ul>
                 </nav>
             </div>
@@ -62,11 +73,10 @@
         <div class="content-wrapper">
             <div class="content-header">
                 <div class="container-fluid">
-                    <div class="row mb-2">
-                        <div class="col-sm-6">
-                            <h1 class="m-0">{% block header %}Dashboard{% endblock %}</h1>
-                        </div>
-                    </div>
+                    
+                    
+                            <!-- <h1 class="m-0">{% block header %}Dashboard{% endblock %}</h1> -->
+                      
                 </div>
             </div>
 

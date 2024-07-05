@@ -2,85 +2,36 @@
 
 {% block title %}Recruiter Dashboard{% endblock %}
 {% block brand %}Recruiter Dashboard{% endblock %}
-{% block user_name %}Recruiter Name{% endblock %}
 
-{% block sidebar %}
-<li class="nav-item">
-    <a href="#" class="nav-link">
-        <i class="nav-icon fas fa-tachometer-alt"></i>
-        <p>
-            Dashboard
-        </p>
-    </a>
-</li>
-<li class="nav-item">
-    <a href="#" class="nav-link">
-        <i class="nav-icon fas fa-briefcase"></i>
-        <p>
-            Job Postings
-        </p>
-    </a>
-</li>
-<li class="nav-item">
-    <a href="#" class="nav-link">
-        <i class="nav-icon fas fa-envelope"></i>
-        <p>
-            Requests
-        </p>
-    </a>
-</li>
-{% endblock %}
-
-{% block header %}Recruiter Dashboard{% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="col-lg-3 col-6">
-        <div class="small-box bg-info">
-            <div class="inner">
-                <h3>10</h3>
-                <p>Job Postings</p>
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-12">
+           
+            <div class="row">
+                {% for institute in institutes %}
+                <div class="col-md-4">
+                    <div class="card mb-4 shadow-sm">
+                        {% if institute.logo %}
+                        <img src="{{ institute.logo.url }}" class="card-img-top" alt="{{ institute.institute_name }} Logo">
+                        {% else %}
+                        <img src="https://via.placeholder.com/150" class="card-img-top" alt="No Institute Logo">
+                        {% endif %}
+                        <div class="card-body text-center">
+                            <h5 class="card-text text-center">{{ institute.institute_name }}</h5>
+                            <p class="card-text">{{ institute.location }}</p>
+                            <form action="{% url 'send_request' institute.id %}" method="post">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-paper-plane"></i> &nbsp;Send Request
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
             </div>
-            <div class="icon">
-                <i class="ion ion-bag"></i>
-            </div>
-            <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-        </div>
-    </div>
-    <div class="col-lg-3 col-6">
-        <div class="small-box bg-success">
-            <div class="inner">
-                <h3>8</h3>
-                <p>Requests Sent</p>
-            </div>
-            <div class="icon">
-                <i class="ion ion-stats-bars"></i>
-            </div>
-            <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-        </div>
-    </div>
-    <div class="col-lg-3 col-6">
-        <div class="small-box bg-warning">
-            <div class="inner">
-                <h3>5</h3>
-                <p>Requests Approved</p>
-            </div>
-            <div class="icon">
-                <i class="ion ion-person-add"></i>
-            </div>
-            <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-        </div>
-    </div>
-    <div class="col-lg-3 col-6">
-        <div class="small-box bg-danger">
-            <div class="inner">
-                <h3>2</h3>
-                <p>Pending Approvals</p>
-            </div>
-            <div class="icon">
-                <i class="ion ion-pie-graph"></i>
-            </div>
-            <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
         </div>
     </div>
 </div>

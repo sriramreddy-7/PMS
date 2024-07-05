@@ -44,6 +44,14 @@ urlpatterns = [
     path('job_data/', views.institute_job_data, name='institute_job_data'),
     path('edit_institute_profile/', views.edit_institute_profile, name='edit_institute_profile'),
     path('view_institute_profile/', views.view_institute_profile, name='view_institute_profile'),
-    
+
+    ##### Recruiter
+   
+    path('recruiter_dashboard/', views.recruiter_dashboard, name='recruiter_dashboard'),
+    path('send_request/<int:institute_id>/', views.send_request, name='send_request'),
+    path('requests/', views.institute_requests, name='institute_requests'),
+    path('manage_request/<int:request_id>/', views.manage_request, name='manage_request'),
+    path('view_shared_student/<int:student_id>/', views.view_shared_student, name='view_shared_student'),
+
     
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

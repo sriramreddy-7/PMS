@@ -1,0 +1,44 @@
+{% extends 'institute/base_institute.html' %}
+
+{% block title %}Institute Requests{% endblock %}
+{% block brand %}Institute Dashboard{% endblock %}
+{% block user_name %}{{ institute.institute_name }}{% endblock %}
+{% block header %}Requests{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-12">
+            <h2>Received Requests</h2>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Recruiter</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for request in requests %}
+                    <tr>
+                        <td>{{ request.sender.recruiter_profile.organization_name }}</td>
+                        <td>{{ request.get_status_display }}</td>
+                        <td>
+                            {% if request.status == 'pending' %}
+                            <form action="{% url 'manage_request' request.id %}" method="post">
+                                {% csrf_token %}
+                                <button type="submit" name="action" value="accept" class="btn btn-success">Accept</button>
+                                <button type="submit" name="action" value="decline" class="btn btn-danger">Decline</button>
+                            </form>
+                            {% else %}
+                            {{ request.get_status_display }}
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

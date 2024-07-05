@@ -27,12 +27,10 @@ def student_dashboard(request):
 
 
 
-@login_required
-def recruiter_dashboard(request):
-    if request.user.profile.role != 'recruiter':
-        messages.error(request, 'You do not have permission to access this page.')
-        return redirect('login')
-    return render(request, 'recruiter/dashboard.html')
+
+
+
+
 
 @login_required
 def institute_dashboard(request):
@@ -461,13 +459,15 @@ def view_institute_profile(request):
 
 @login_required
 def recruiter_dashboard(request):
-    # Retrieve all available institutes
+    # Retrieve all available institute
+    if request.user.profile.role != 'recruiter':
+        messages.error(request, 'You do not have permission to access this page.')
+        return redirect('login')
     institutes = InstituteProfile.objects.all()
     context = {
         'institutes': institutes,
     }
-    return render(request, 'recruiter/recruiter_dashboard.html', context)
-
+    return render(request, 'recruiter/dashboard.html', context)
 @login_required
 def send_request(request, institute_id):
     if request.method == 'POST':
@@ -517,3 +517,6 @@ def view_shared_student(request, student_id):
         'student': student,
     }
     return render(request, 'recruiter/view_shared_student.html', context)
+
+
+

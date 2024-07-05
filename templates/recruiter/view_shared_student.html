@@ -1,0 +1,41 @@
+{% extends 'recruiter/base_recruiter.html' %}
+
+{% block title %}View Student{% endblock %}
+{% block brand %}Recruiter Dashboard{% endblock %}
+{% block user_name %}{{ user.username }}{% endblock %}
+{% block header %}View Student{% endblock %}
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-12">
+            <h2>Student Details</h2>
+            <table class="table table-striped">
+                <tr>
+                    <th>First Name</th>
+                    <td>{{ student.user.first_name }}</td>
+                </tr>
+                <tr>
+                    <th>Last Name</th>
+                    <td>{{ student.user.last_name }}</td>
+                </tr>
+                <tr>
+                    <th>Email</th>
+                    <td>{{ student.user.email }}</td>
+                </tr>
+                <tr>
+                    <th>Degree</th>
+                    <td>{{ student.degree }}</td>
+                </tr>
+                <tr>
+                    <th>Branch Specialization</th>
+                    <td>{{ student.branch_specialization }}</td>
+                </tr>
+                <tr>
+                    <th>Year of Passout</th>
+                    <td>{{ student.year_of_passout }}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
