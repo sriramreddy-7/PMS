@@ -16,12 +16,14 @@
                                 {% else %}
                                 <img src="https://via.placeholder.com/150" class="img-fluid rounded-circle" style="max-width: 100%;" alt="No Institute Logo">
                                 {% endif %}
+                                
                             </div>
                             <div class="col-md-8">
-                                <h5 class="card-title">{{ institute.institute_name }}</h5>
+                                <div class="text-center">
+                                    <h5 class="card-title"><a href="{% url 'institute_profile'  institute.id  %}" target="_blank"><u>{{ institute.institute_name }}</u></a></h5>
+                                </div>
                                 <p class="card-text">{{ institute.location }}</p>
                                 <p class="card-text">{{ institute.contact_number }}</p>
-                                <p class="card-text">Website: <a href="{{ institute.website }}" target="_blank"><u>View</u></a></p>
                                 <p class="card-text">State: {{ institute.state }}</p>
                                 <p class="card-text">Country: {{ institute.country }}</p>
                                 <p class="card-text">Number of Students: {{ institute.num_students }}</p>

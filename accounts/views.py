@@ -298,6 +298,15 @@ def student_details_update(request):
     # Render the update profile form with current profile data
     return render(request, 'student/update_profile.html', {'student_profile': student_profile})
 
+
+def all_recruiters(request):
+    recruiters = RecruiterProfile.objects.all()
+    context = {
+        'recruiters': recruiters,
+    }
+    return render(request, 'institute/all_recruiters.html', context)
+
+
 @login_required
 def post_job_opening(request):
     if request.method == 'POST':
@@ -494,8 +503,10 @@ def recruiter_dashboard(request):
         return redirect('login')
     # institutes = InstituteProfile.objects.all()
     institutes = InstituteProfile.objects.annotate(num_students=Count('students'))
+    recruiter_profile=request.user.recruiter_profile
     context = {
         'institutes': institutes,
+        'recruiter_profile':recruiter_profile,
     }
     return render(request, 'recruiter/dashboard.html', context)
 
@@ -537,6 +548,7 @@ def institute_requests(request):
     received_requests = Request.objects.filter(receiver=request.user)
     context = {
         'requests': received_requests,
+        'institute_profile': institute_profile,
     }
     return render(request, 'institute/institute_requests.html', context)
 
@@ -588,9 +600,10 @@ def institute_list(request):
             'accepted': is_accepted,
             'shared_students_count': shared_students_count,
         })
-    
+    recruiter_profile = request.user.recruiter_profile
     context = {
         'institute_list': institute_list,
+        'recruiter_profile':recruiter_profile,
     }
     return render(request, 'recruiter/institute_list.html', context)
 
@@ -615,10 +628,11 @@ def view_shared_students(request, institute_id):
     #     id__in=[req.sender.student_profile.id for req in accepted_requests]
     # )
     shared_students = StudentProfile.objects.filter(institute=institute)
-    
+    recruiter_profile = request.user.recruiter_profile
     context = {
         'institute': institute,
         'shared_students': shared_students,
+        'recruiter_profile':recruiter_profile,
     }
     return render(request, 'recruiter/view_shared_students.html', context)
 
@@ -630,12 +644,14 @@ def list_shared_students(request):
         messages.error(request, 'You do not have permission to access this page.')
         return redirect('login')
     
-    recruiter = request.user.recruiter_profile  # Assuming recruiter profile is linked to User
+    recruiter = request.user.recruiter_profile
+    recruiter_profile=recruiter
     accepted_requests = Request.objects.filter(sender=request.user, status='accepted')
     students = StudentProfile.objects.filter(institute__in=[req.receiver.institute_profile for req in accepted_requests])
     
     context = {
         'students': students,
+        'recruiter_profile':recruiter_profile,
     }
     return render(request, 'recruiter/list_shared_students.html', context)
 
@@ -643,6 +659,7 @@ def list_shared_students(request):
 @login_required
 def recruiter_student_profile(request, username):
     # Ensure only recruiters can access this view
+    recruiter_profile = request.user.recruiter_profile
     if request.user.profile.role != 'recruiter':
         messages.error(request, 'You do not have permission to access this page.')
         return redirect('login')
@@ -652,5 +669,55 @@ def recruiter_student_profile(request, username):
     
     context = {
         'student': student,
+        'recruiter_profile':recruiter_profile,
     }
     return render(request, 'recruiter/recruiter_student_profile.html', context)
+
+
+def institute_profile(request, institute_id):
+    try:
+        institute_profile = InstituteProfile.objects.get(id=institute_id)
+    except InstituteProfile.DoesNotExist:
+        messages.error(request, 'Institute profile does not exist.')
+        return redirect('home')  # Redirect to home or another appropriate view
+    recruiter_profile = request.user.recruiter_profile
+    context = {
+        'institute': institute_profile,
+        'recruiter_profile':recruiter_profile,
+    }
+    return render(request, 'recruiter/institute_profile.html', context)
+
+
+@login_required
+def recruiter_profile(request):
+    recruiter_profile = request.user.recruiter_profile
+    context = {
+        'recruiter_profile': recruiter_profile,
+    }
+    return render(request, 'recruiter/recruiter_profile.html', context)
+
+
+
+
+@login_required
+def edit_recruiter_profile(request):
+    recruiter_profile = request.user.recruiter_profile
+    
+    if request.method == 'POST':
+        recruiter_profile.organization_name = request.POST.get('organization_name')
+        recruiter_profile.website = request.POST.get('website')
+        recruiter_profile.location = request.POST.get('location')
+        recruiter_profile.contact_number = request.POST.get('contact_number')
+        recruiter_profile.designation = request.POST.get('designation')
+        
+        # Handle logo update
+        if 'logo' in request.FILES:
+            recruiter_profile.logo = request.FILES['logo']
+        
+        recruiter_profile.save()
+        return redirect('recruiter_profile')
+    
+    context = {
+        'recruiter_profile': recruiter_profile,
+    }
+    return render(request, 'recruiter/edit_recruiter_profile.html', context)

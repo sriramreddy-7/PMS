@@ -1,0 +1,45 @@
+{% extends 'recruiter/base_recruiter.html' %}
+{% block title %}Institute Details - {{ institute.institute_name }}{% endblock %}
+{% block brand %}Institute Details - {{ institute.institute_name }}{% endblock %}
+{% block content %}
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                {% if institute.logo %}
+                    <img src="{{ institute.logo.url }}" class="card-img-top" alt="{{ institute.institute_name }} Logo">
+                {% else %}
+                    <img src="https://via.placeholder.com/150" class="card-img-top" alt="No Institute Logo">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ institute.institute_name }}</h5>
+                    <p class="card-text">{{ institute.location }}</p>
+                    <p class="card-text">{{ institute.contact_number }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <h3>Institute Details</h3>
+            <table class="table table-striped">
+                <tr>
+                    <th>Email</th>
+                    <td>{{ institute.user.email }}</td>
+                </tr>
+                <tr>
+                    <th>Website</th>
+                    <td><a href="{{ institute.website }}" target="_blank">{{ institute.website }}</a></td>
+                </tr>
+                <tr>
+                    <th>State</th>
+                    <td>{{ institute.state }}</td>
+                </tr>
+                <tr>
+                    <th>Country</th>
+                    <td>{{ institute.country }}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends 'institute/base_institute.html' %}
+{% load static %}
+
+{% block title %}Institute Dashboard{% endblock %}
+{% block brand %}Institute Dashboard{% endblock %}
+{% block user_name %}{{ institute_profile.institute_name }}{% endblock %}
+{% block content %}
+<div class="content">
+    <div class="container-fluid">
+        <div class="row">
+            {% for recruiter in recruiters %}
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-md-2">
+                                <!-- Display recruiter's profile picture or default image -->
+                                <img src="{{ recruiter.logo.url }}" class="img-fluid rounded-circle" style="max-width: 100%;" alt="Recruiter Profile Picture">
+                            </div>
+                            <div class="col-md-8">
+                                <div class="text-center">
+                                    <h5 class="card-title">{{ recruiter.organization_name }}</h5>
+                                </div>
+                                <p class="card-text">{{ recruiter.location }}</p>
+                                <p class="card-text">{{ recruiter.contact_number }}</p>
+                                <p class="card-text">Designation: {{ recruiter.designation }}</p>
+                                <!-- Add other relevant fields from RecruiterProfile model -->
+                            </div>
+                            <div class="col-md-2">
+                                <!-- Add any actions/buttons specific to recruiters if needed -->
+                                <form action="{% url 'send_request' recruiter.user.id %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-paper-plane"></i> Send Request
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

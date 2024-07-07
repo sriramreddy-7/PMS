@@ -41,17 +41,20 @@ class StudentProfile(models.Model):
         return f'{self.user.username} - Student'
     
 
+def upload_location(instance, filename):
+    return f"recruiter_profiles/{instance.user.username}/{filename}"
+
 class RecruiterProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='recruiter_profile')
     organization_name = models.CharField(max_length=255, default='Default Organization')
-    website = models.URLField(blank=True, null=True)
-    location = models.CharField(max_length=255, blank=True, null=True)
-    contact_number = models.CharField(max_length=15, blank=True, null=True)
+    website = models.URLField(blank=True, null=True, default=None)
+    location = models.CharField(max_length=255, blank=True, null=True, default=None)
+    contact_number = models.CharField(max_length=15, blank=True, null=True, default=None)
     designation = models.CharField(max_length=255, default='Default Designation')
-    
+    logo = models.ImageField(upload_to=upload_location, blank=True, null=True,default=None)
+
     def __str__(self):
         return self.organization_name
-
 
 class JobOpening(models.Model):
     institute = models.ForeignKey(InstituteProfile, on_delete=models.CASCADE, related_name='job_openings')

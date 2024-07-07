@@ -19,7 +19,7 @@
                     <a class="nav-link" data-widget="pushmenu" href="#"><i class="fas fa-bars"></i></a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
-                    <a href="{% url 'institute_dashboard' %}" class="nav-link">Home </a>
+                    <a href="{% url 'institute_dashboard' %}" class="nav-link"><strong>Welcome to Institute Dashboard </strong></a>
                 </li>
             </ul>
         </nav>
@@ -34,86 +34,77 @@
                         <img src="{{ institute_profile.logo.url }}" class="img-circle elevation-2" alt="User Image">
                     </div>
                     <div class="info">
-                        <a href="#" class="d-block">{% block user_name %}{{request.user.first_name }}{% endblock %}</a>
+                        <a href="#" class="d-block">{{request.user.first_name }}</a>
                     </div>
                 </div>
 
-                <nav class="mt-2">
-                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                        {% block sidebar %}
-                        <li class="nav-item">
-                            <a href="{% url 'institute_dashboard' %}" class="nav-link">
-                                <i class="nav-icon fas fa-tachometer-alt"></i>
-                                <p>
-                                    Dashboard
-                                </p>
-                            </a>
-                        </li>
-                         <li class="nav-item">
-                            <a href="{% url 'view_institute_profile' %}" class="nav-link">
-                                <i class="nav-icon fas fa-tachometer-alt"></i>
-                                <p>
-                                    View Institute Profile
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{% url 'bulk_student_upload' %}" class="nav-link">
-                                <i class="nav-icon fas fa-users"></i>
-                                <p>
-                                    Bulk Upload
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{% url 'student_details' %}" class="nav-link">
-                                <i class="nav-icon fas fa-user"></i>
-                                <p>
-                                    Student Details
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-    <a href="{% url 'institute_requests' %}" class="nav-link">
-        <i class="nav-icon fas fa-envelope"></i>
-        <p>Requests</p>
-    </a>
-</li>
-                        <li class="nav-item">
-    <a href="{% url 'post_job' %}" class="nav-link">
-        <i class="nav-icon fas fa-briefcase"></i>
-        <p>
-            Post Jobs
-        </p>
-    </a>
-</li>
-<li class="nav-item">
-    <a href="{% url 'institute_job_data' %}" class="nav-link">
-        <i class="nav-icon fas fa-file-alt"></i>
-        <p>
-            Job Postings Details
-        </p>
-    </a>
-</li>
-<li class="nav-item">
-    <a href="{% url 'institute_student_off_campus_jobs_status' %}" class="nav-link">
-        <i class="nav-icon fas fa-file-alt"></i>
-        <p>
-            ATS OFF Campus
-        </p>
-    </a>
-</li>
+              <nav class="mt-2">
+    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+        {% block sidebar %}
+        <li class="nav-item">
+            <a href="{% url 'institute_dashboard' %}" class="nav-link">
+                <i class="nav-icon fas fa-tachometer-alt"></i>
+                <p>Dashboard</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'view_institute_profile' %}" class="nav-link">
+                <i class="nav-icon fas fa-id-card"></i>
+                <p>View Institute Profile</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'bulk_student_upload' %}" class="nav-link">
+                <i class="nav-icon fas fa-users"></i>
+                <p>Bulk Upload</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'student_details' %}" class="nav-link">
+                <i class="nav-icon fas fa-user"></i>
+                <p>Student Details</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'all_recruiters' %}" class="nav-link">
+                <i class="nav-icon fas fa-briefcase"></i>
+                <p>Recruiters</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'institute_requests' %}" class="nav-link">
+                <i class="nav-icon fas fa-envelope"></i>
+                <p>Requests</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'post_job' %}" class="nav-link">
+                <i class="nav-icon fas fa-briefcase"></i>
+                <p>Post Jobs</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'institute_job_data' %}" class="nav-link">
+                <i class="nav-icon fas fa-file-alt"></i>
+                <p>Job Postings Details</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'institute_student_off_campus_jobs_status' %}" class="nav-link">
+                <i class="nav-icon fas fa-file-alt"></i>
+                <p>ATS OFF Campus</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'logout' %}" class="nav-link">
+                <i class="nav-icon fas fa-sign-out-alt"></i>
+                <p>Logout</p>
+            </a>
+        </li>
+        {% endblock %}
+    </ul>
+</nav>
 
-
-                         <li class="nav-item">
-                        <a href="{% url 'logout' %}" class="nav-link">
-                            <i class="nav-icon fas fa-sign-out-alt"></i>
-                            <p>Logout</p>
-                            </a>
-                        </li>
-                        {% endblock %}
-                    </ul>
-                </nav>
             </div>
         </aside>
 

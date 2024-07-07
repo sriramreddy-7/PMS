@@ -1,0 +1,50 @@
+{% extends 'recruiter/base_recruiter.html' %}
+
+{% block title %}Recruiter Profile{% endblock %}
+{% block brand %}Institute Dashboard{% endblock %}
+{% block user_name %}{{ recruiter_profile.organization_name }}{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                {% if recruiter_profile.logo %}
+                    <img src="{{ recruiter_profile.logo.url }}" class="card-img-top" alt="Organization Logo">
+                {% else %}
+                    <img src="https://via.placeholder.com/150" class="card-img-top" alt="No Logo">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ recruiter_profile.organization_name }}</h5>
+                    <p class="card-text"><strong>Email:</strong> {{ recruiter_profile.user.email }}</p>
+                </div>
+            </div>
+            <div class="mt-3">
+                <a href="{% url 'edit_recruiter_profile' %}" class="btn btn-primary">Edit Profile</a>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <h3>Recruiter Details</h3>
+            <table class="table table-striped">
+                <tr>
+                    <th>Contact Number</th>
+                    <td>{{ recruiter_profile.contact_number }}</td>
+                </tr>
+                <tr>
+                    <th>Website</th>
+                    <td>{{ recruiter_profile.website }}</td>
+                </tr>
+                <tr>
+                    <th>Location</th>
+                    <td>{{ recruiter_profile.location }}</td>
+                </tr>
+                <tr>
+                    <th>Designation</th>
+                    <td>{{ recruiter_profile.designation }}</td>
+                </tr>
+               
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -45,6 +45,9 @@ urlpatterns = [
     path('delete_job/<int:job_id>/', views.delete_job, name='delete_job'),
     
     # other paths...
+    path('all_recruiters/', views.all_recruiters, name='all_recruiters'),
+    
+    
     path('post_job/', views.post_job_opening, name='post_job'),
     path('job_data/', views.institute_job_data, name='institute_job_data'),
     path('edit_institute_profile/', views.edit_institute_profile, name='edit_institute_profile'),
@@ -56,12 +59,14 @@ urlpatterns = [
     path('send_request/<int:institute_id>/', views.send_request, name='send_request'),
     path('requests/', views.institute_requests, name='institute_requests'),
     path('manage_request/<int:request_id>/', views.manage_request, name='manage_request'),
-    
-    
+    path('recruiter_profile/', views.recruiter_profile, name='recruiter_profile'),
+    path('edit_recruiter_profile/', views.edit_recruiter_profile, name='edit_recruiter_profile'),
+
     path('institute_list', views.institute_list, name='institute_list'),
     path('list_shared_students/', views.list_shared_students, name='list_shared_students'),
     path('view_shared_students/<int:institute_id>/', views.view_shared_students, name='view_shared_students'),
     path('recruiter_student_profile/<str:username>/', views.recruiter_student_profile, name='recruiter_student_profile'),
+    path('institute_profile/<int:institute_id>/', views.institute_profile, name='institute_profile'),
 
     
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,0 +1,53 @@
+<!-- edit_recruiter_profile.html -->
+
+{% extends 'recruiter/base_recruiter.html' %}
+{% block title %}Edit Recruiter Profile{% endblock %}
+{% block brand %}Edit Recruiter Profile{% endblock %}
+{% block content %}
+<div class="content">
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-body">
+                        <form action="{% url 'edit_recruiter_profile' %}" method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="organization_name">Organization Name</label>
+                                <input type="text" class="form-control" id="organization_name" name="organization_name" value="{{ recruiter_profile.organization_name }}" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="website">Website</label>
+                                <input type="url" class="form-control" id="website" name="website" value="{{ recruiter_profile.website }}">
+                            </div>
+                            <div class="form-group">
+                                <label for="location">Location</label>
+                                <input type="text" class="form-control" id="location" name="location" value="{{ recruiter_profile.location }}">
+                            </div>
+                            <div class="form-group">
+                                <label for="contact_number">Contact Number</label>
+                                <input type="tel" class="form-control" id="contact_number" name="contact_number" value="{{ recruiter_profile.contact_number }}">
+                            </div>
+                            <div class="form-group">
+                                <label for="designation">Designation</label>
+                                <input type="text" class="form-control" id="designation" name="designation" value="{{ recruiter_profile.designation }}">
+                            </div>
+                            <div class="form-group">
+                                <label for="logo">Logo</label>
+                                <input type="file" class="form-control-file" id="logo" name="logo">
+                                {% if recruiter_profile.logo %}
+                                    <p>Current Logo:</p>
+                                    <img src="{{ recruiter_profile.logo.url }}" alt="Current Logo" style="max-width: 100px;">
+                                {% else %}
+                                    <p>No logo uploaded.</p>
+                                {% endif %}
+                            </div>
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

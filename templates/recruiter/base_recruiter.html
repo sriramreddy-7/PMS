@@ -30,48 +30,64 @@
             </a>
 
             <div class="sidebar">
-                <div class="user-panel mt-3 pb-3 mb-3 d-flex">                   
+                <div class="user-panel mt-3 pb-3 mb-3 d-flex">  
+                    <div class="image">
+                        <img src="{{ recruiter_profile.logo.url }}" class="img-circle elevation-2" alt="recruiter logo">
+                    </div>                 
                     <div class="info">
                         <a href="{% url 'recruiter_dashboard' %}" class="d-block"><strong>{{ request.user.first_name }} {{ request.user.last_name }}</strong></a>
                     </div>
                 </div>
 
-                <nav class="mt-2">
-                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
-                        data-accordion="false">
-                        <li class="nav-item">
-                            <a href="{% url 'recruiter_dashboard' %}" class="nav-link">
-                                <i class="nav-icon fas fa-tachometer-alt"></i>
-                                <p>Dashboard</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="" class="nav-link">
-                                <i class="nav-icon fas fa-briefcase"></i>
-                                <p>Job Postings</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="" class="nav-link">
-                                <i class="nav-icon fas fa-envelope"></i>
-                                <p>Requests</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{% url 'institute_list'  %}" class="nav-link">
-                                <i class="nav-icon fas fa-user"></i>
-                                <p>Institute list</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{% url 'list_shared_students' %}" class="nav-link">
-                                <i class="nav-icon fas fa-envelope"></i>
-                                <p>Shared Details</p>
-                            </a>
-                        </li>
-                        
-                    </ul>
-                </nav>
+               
+
+              <nav class="mt-2">
+    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+        <li class="nav-item">
+            <a href="{% url 'recruiter_dashboard' %}" class="nav-link">
+                <i class="nav-icon fas fa-tachometer-alt"></i>
+                <p>Dashboard</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'recruiter_profile' %}" class="nav-link">
+                <i class="nav-icon fas fa-user"></i>
+                <p>Profile</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="" class="nav-link">
+                <i class="nav-icon fas fa-briefcase"></i>
+                <p>Job Postings</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="" class="nav-link">
+                <i class="nav-icon fas fa-envelope"></i>
+                <p>Requests</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'institute_list' %}" class="nav-link">
+                <i class="nav-icon fas fa-university"></i>
+                <p>Institute List</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'list_shared_students' %}" class="nav-link">
+                <i class="nav-icon fas fa-users"></i>
+                <p>Shared Details</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'logout' %}" class="nav-link">
+                <i class="nav-icon fas fa-sign-out-alt"></i>
+                <p>Logout</p>
+            </a>
+        </li>
+    </ul>
+</nav>
+
             </div>
         </aside>
 
@@ -85,20 +101,7 @@
             <section class="content">
                 <div class="container-fluid">
                     {% block content %}
-                    <div class="row">
-                        <div class="col-lg-3 col-6">
-                            <div class="small-box bg-info">
-                                <div class="inner">
-                                    <h3>0</h3>
-                                    <p>Placeholder</p>
-                                </div>
-                                <div class="icon">
-                                    <i class="ion ion-bag"></i>
-                                </div>
-                                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-                            </div>
-                        </div>
-                    </div>
+
                     {% endblock %}
                 </div>
             </section>
