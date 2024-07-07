@@ -47,12 +47,49 @@
                                 <td><a
                                         href="{% url 'student_profile' student.user.username %}"><u>{{ student.user.username }}</u></a>
                                 </td>
-                                <td>{{ student.user.get_full_name }}</td>
-                                <td>{{ student.user.email }}</td>
-                                <td>{{ student.contact_number }}</td>
-                                <td>{{ student.degree }}</td>
-                                <td>{{ student.branch_specialization }}</td>
-                                <td>{{ student.year_of_passout }}</td>
+                                <td>
+    {% if student.user.get_full_name %}
+        {{ student.user.get_full_name }}
+    {% else %}
+        <span class="text-danger"></i> Not updated</span>
+    {% endif %}
+</td>
+<td>
+    {% if student.user.email %}
+        {{ student.user.email }}
+    {% else %}
+        <span class="text-danger"></i> Not updated</span>
+    {% endif %}
+</td>
+<td>
+    {% if student.contact_number %}
+        {{ student.contact_number }}
+    {% else %}
+        <span class="text-danger"></i> Not updated</span>
+    {% endif %}
+</td>
+<td>
+    {% if student.degree %}
+        {{ student.degree }}
+    {% else %}
+        <span class="text-danger"></i> Not updated</span>
+    {% endif %}
+</td>
+<td>
+    {% if student.branch_specialization %}
+        {{ student.branch_specialization }}
+    {% else %}
+        <span class="text-danger"></i> Not updated</span>
+    {% endif %}
+</td>
+<td>
+    {% if student.year_of_passout %}
+        {{ student.year_of_passout }}
+    {% else %}
+        <span class="text-danger"></i> Not updated</span>
+    {% endif %}
+</td>
+
                                 <!-- <td>
                                     {% if student.resume %}
                                     <a href="{{ student.resume.url }}" class="btn btn-primary" target="_blank">

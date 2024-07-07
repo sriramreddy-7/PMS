@@ -41,6 +41,9 @@ urlpatterns = [
     path("institute_job_applications//<int:job_id>/",views.institute_job_applications,name="institute_job_applications"),
     path('student_job_applications/', views.student_job_applications, name='student_job_applications'),
     path("institute_student_off_campus_jobs_status",views.institute_student_off_campus_jobs_status,name="institute_student_off_campus_jobs_status"),
+    path('edit_job/<int:job_id>/', views.edit_job, name='edit_job'),
+    path('delete_job/<int:job_id>/', views.delete_job, name='delete_job'),
+    
     # other paths...
     path('post_job/', views.post_job_opening, name='post_job'),
     path('job_data/', views.institute_job_data, name='institute_job_data'),

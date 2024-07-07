@@ -18,18 +18,15 @@
                     <a class="nav-link" data-widget="pushmenu" href="#"><i class="fas fa-bars"></i></a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
-                    <a href="{% url 'student_dashboard' %}" class="nav-link">Home</a>
+                    <a href="{% url 'student_dashboard' %}" class="nav-link">Welcome to PMS Student-Dashboard</a>
                 </li>
             </ul>
         </nav>
 
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
-            <a href="{% url 'student_dashboard' %}" class="brand-link">
-                <img src="https://adminlte.io/themes/v3/dist/img/AdminLTELogo.png" alt="AdminLTE Logo"
-                    class="brand-image img-circle elevation-3" style="opacity: 0.8" />
-                <span class="brand-text font-weight-light">{% block brand %}Dashboard{% endblock %}</span>
+            <a href="{% url 'student_dashboard' %}" class="brand-link">                
+                <span class="brand-text font-weight">&nbsp; &nbsp; PMS Student</span>
             </a>
-
             <div class="sidebar">
                 <div class="user-panel mt-3 pb-3 mb-3 d-flex">
                     <div class="image">
@@ -95,7 +92,7 @@
                 <div class="container-fluid">
                     <div class="row mb-2">
                         <div class="col-sm-6">
-                            <h1 class="m-0">{% block header %}Dashboard{% endblock %}</h1>
+                            <h1 class="m-0"></h1>
                         </div>
                     </div>
                 </div>
@@ -104,7 +101,7 @@
             <section class="content">
                 <div class="container-fluid">
                     {% block content %}
-                    <div class="row">
+                    <!-- <div class="row">
                         <div class="col-lg-3 col-6">
                             <div class="small-box bg-info">
                                 <div class="inner">
@@ -118,7 +115,7 @@
                                         class="fas fa-arrow-circle-right"></i></a>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                     {% endblock %}
                 </div>
             </section>

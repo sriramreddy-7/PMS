@@ -7,6 +7,9 @@ from .models import RecruiterProfile, InstituteProfile, Profile, StudentProfile,
 import pandas as pd
 from django.db.models import Q
 # Create your views here.
+from django.utils.dateparse import parse_date
+from django.db.models import Count
+
 
 def test(request):
     return render(request, 'test.html')
@@ -28,11 +31,6 @@ def student_dashboard(request):
             'student': student,
         }
         return render(request, 'student/dashboard.html',context)
-
-
-
-
-
 
 
 
@@ -335,8 +333,8 @@ def institute_job_data(request):
     
     data = []
     for job in job_openings:
-        total_applications = job.applications.count()
-        total_students = institute.students.count()
+        total_applications = job.applications.count()  # Replace with actual related name for applications
+        total_students = institute.students.count()  # Replace with actual related name for students
         if total_students > 0:
             percentage = (total_applications / total_students) * 100
         else:
@@ -347,11 +345,33 @@ def institute_job_data(request):
             'percentage': percentage,
         })
 
-        context = {
-        'job_openings':job_openings,
+    context = {
+        'job_openings': job_openings,
         'job_data': data,
-        }
+    }
     return render(request, 'institute/institute_job_data.html', context)
+
+def edit_job(request, job_id):
+    job = get_object_or_404(JobOpening, id=job_id)
+    if request.method == 'POST':
+        job.title = request.POST.get('title')
+        job.company = request.POST.get('company')
+        job.description = request.POST.get('description')
+        job.deadline = parse_date(request.POST.get('deadline'))
+        job.job_type = request.POST.get('job_type')
+        job.post = request.POST.get('post')
+        job.status = request.POST.get('status')
+        job.save()
+        return redirect('institute_job_data')
+    context = {
+        'job': job
+    }
+    return render(request, 'institute/institute_job_data.html', context)
+
+def delete_job(request, job_id):
+    job = get_object_or_404(JobOpening, id=job_id)
+    job.delete()
+    return redirect('institute_job_data')
 
 
 @login_required
@@ -472,7 +492,8 @@ def recruiter_dashboard(request):
     if request.user.profile.role != 'recruiter':
         messages.error(request, 'You do not have permission to access this page.')
         return redirect('login')
-    institutes = InstituteProfile.objects.all()
+    # institutes = InstituteProfile.objects.all()
+    institutes = InstituteProfile.objects.annotate(num_students=Count('students'))
     context = {
         'institutes': institutes,
     }

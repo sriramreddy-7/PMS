@@ -18,26 +18,21 @@
                     <a class="nav-link" data-widget="pushmenu" href="#"><i class="fas fa-bars"></i></a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
-                    <a href="{% url 'recruiter_dashboard' %}" class="nav-link">Home</a>
+                    <a href="{% url 'recruiter_dashboard' %}" class="nav-link"><strong>Welcome Recruiter Dashboard</strong></a>
                 </li>
             </ul>
         </nav>
 
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <a href="{% url 'recruiter_dashboard' %}" class="brand-link">
-                <img src="https://adminlte.io/themes/v3/dist/img/AdminLTELogo.png" alt="AdminLTE Logo"
-                    class="brand-image img-circle elevation-3" style="opacity: .8">
-                <span class="brand-text font-weight-light">{% block brand %}Dashboard{% endblock %}</span>
+            
+                <span class="brand-text font-weight">&nbsp; PMS Recruiter</span>
             </a>
 
             <div class="sidebar">
-                <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-                    <div class="image">
-                        <img src="https://adminlte.io/themes/v3/dist/img/user2-160x160.jpg" class="img-circle elevation-2"
-                            alt="User Image">
-                    </div>
+                <div class="user-panel mt-3 pb-3 mb-3 d-flex">                   
                     <div class="info">
-                        <a href="{% url 'recruiter_dashboard' %}" class="d-block">{{ request.user.first_name }} {{ request.user.last_name }}</a>
+                        <a href="{% url 'recruiter_dashboard' %}" class="d-block"><strong>{{ request.user.first_name }} {{ request.user.last_name }}</strong></a>
                     </div>
                 </div>
 
