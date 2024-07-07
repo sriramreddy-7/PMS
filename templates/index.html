@@ -1,109 +1,43 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PlaceCom - Welcome</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            background-color: #F0BC74;
-            color: #1F2937;
-            font-family: 'Arial', sans-serif;
-        }
-        .container {
-            margin-top: 50px;
-        }
-        .jumbotron {
-            background-color: #1F2937;
-            color: white;
-            padding: 2rem 1rem;
-            border-radius: 15px;
-        }
-        .btn-custom {
-            background-color: #1F2937;
-            color: white;
-            border-radius: 25px;
-            padding: 10px 20px;
-            font-size: 1.2rem;
-            transition: background-color 0.3s;
-        }
-        .btn-custom:hover {
-            background-color: #333;
-            color: white;
-        }
-        .role-card {
-            background-color: white;
-            border: none;
-            border-radius: 15px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s;
-        }
-        .role-card:hover {
-            transform: translateY(-10px);
-        }
-        .role-card img {
-            border-top-left-radius: 15px;
-            border-top-right-radius: 15px;
-        }
-        .role-card .card-body {
-            padding: 1rem;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="jumbotron text-center">
-            <h1 class="display-4">Welcome to PlaceCom!</h1>
-            <p class="lead">Your ultimate placement management portal.</p>
-            <hr class="my-4">
-            <p>Choose your role to get started:</p>
+{% extends 'base.html' %}
+{% load static %}
+
+     {% block content %}
+        <section class="hero">
+        <div class="container">
+            <h2>Welcome to PMS</h2>
+            <p>Your one-stop solution for managing campus placements.</p>
+            <a href="{% url 'signup' %}" class="btn btn-primary">Get Started</a>
         </div>
-        <div class="row text-center">
-            <div class="col-md-6 mb-4">
-                <div class="card role-card">
-                    <img src="https://via.placeholder.com/300x200" class="card-img-top" alt="Sign Up">
-                    <div class="card-body">
-                        <a href="{% url 'signup' %}" class="btn btn-custom btn-block">Sign Up</a>
+    </section>
+    <section class="features py-5">
+        <div class="container">
+            <h2>Features</h2>
+            <div class="row mt-4">
+                <div class="col-md-4">
+                    <div class="feature">
+                        <h3>For Students</h3>
+                        <p>Browse and apply for jobs, track your applications, and get notified about new opportunities.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature">
+                        <h3>For Companies</h3>
+                        <p>Post job openings, review applications, and manage the recruitment process with ease.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature">
+                        <h3>For Placement Officers</h3>
+                        <p>Oversee the entire placement process, approve job postings, and generate detailed reports.</p>
                     </div>
                 </div>
             </div>
-            <div class="col-md-6 mb-4">
-                <div class="card role-card">
-                    <img src="https://via.placeholder.com/300x200" class="card-img-top" alt="Log In">
-                    <div class="card-body">
-                        <a href="{% url 'login' %}" class="btn btn-custom btn-block">Log In</a>
-                    </div>
-                </div>
-            </div>
-            <!-- <div class="col-md-4 mb-4">
-                <div class="card role-card">
-                    <img src="https://via.placeholder.com/300x200" class="card-img-top" alt="Student Dashboard">
-                    <div class="card-body">
-                        <a href="{% url 'student_dashboard' %}" class="btn btn-custom btn-block">Student Dashboard</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 mb-4">
-                <div class="card role-card">
-                    <img src="https://via.placeholder.com/300x200" class="card-img-top" alt="Recruiter Dashboard">
-                    <div class="card-body">
-                        <a href="{% url 'recruiter_dashboard' %}" class="btn btn-custom btn-block">Recruiter Dashboard</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 mb-4">
-                <div class="card role-card">
-                    <img src="https://via.placeholder.com/300x200" class="card-img-top" alt="Institute Dashboard">
-                    <div class="card-body">
-                        <a href="{% url 'institute_dashboard' %}" class="btn btn-custom btn-block">Institute Dashboard</a>
-                    </div>
-                </div>
-            </div> -->
         </div>
-    </div>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    </section>
+    <!-- <footer class="bg-dark text-white py-3">
+        <div class="container">
+            <p class="mb-0">&copy; PMS by ksr </p>
+        </div>
+    </footer> -->
 </body>
-</html>
+{% endblock %}

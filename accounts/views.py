@@ -3,12 +3,25 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login as auth_login, logout
 from django.contrib.auth.decorators import login_required
-from .models import RecruiterProfile, InstituteProfile, Profile, StudentProfile,JobOpening, InstituteProfile,JobApplication,Request
+from .models import RecruiterProfile, InstituteProfile, Profile, StudentProfile, JobOpening, JobApplication, Request
 import pandas as pd
 from django.db.models import Q
-# Create your views here.
 from django.utils.dateparse import parse_date
 from django.db.models import Count
+from django.core.mail import send_mail, EmailMessage
+from django.http import HttpResponse
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from decouple import config
+from django.conf import settings
+
+from django.contrib.auth.tokens import default_token_generator
+from django.urls import reverse  # Add this import
+from django.utils.http import urlsafe_base64_decode
+
+
+
+# @receiver(post_save, sender=User)
 
 
 def test(request):
@@ -19,6 +32,9 @@ def index(request):
 
 def signup(request):
     return render(request, 'signup.html')
+
+
+
 
 @login_required
 def student_dashboard(request):
@@ -165,6 +181,93 @@ def logout_view(request):
     logout(request)
     return redirect('login')
 
+
+def password_reset_request(request):
+    if request.method == 'POST':
+        email = request.POST['email']
+        associated_users = User.objects.filter(email=email)
+        if associated_users.exists():
+            for user in associated_users:
+                subject = 'Password Reset Requested'
+                email_template_name = 'password_reset_email.html'
+                uid = urlsafe_base64_encode(force_bytes(user.pk)).decode()
+                token = default_token_generator.make_token(user)
+                password_reset_link = reverse('password_reset_confirm', kwargs={'uidb64': uid, 'token': token})
+                email_body = f'Hi {user.username},\n\nTo reset your password, please click the link below:\n{password_reset_link}\n\nIf you did not request a password reset, please ignore this email.\n\nBest regards,\nYour Platform Team'
+                send_mail(subject, email_body, settings.EMAIL_HOST_USER, [email], fail_silently=False)
+            messages.success(request, 'Password reset link sent successfully. Please check your email.')
+            return redirect('password_reset_done')
+        messages.error(request, 'No user associated with this email. Please check the email entered.')
+    return render(request, 'password_reset.html')
+
+def password_reset_done(request):
+    return render(request, 'password_reset_done.html')
+
+def password_reset_confirm(request, uidb64, token):
+    try:
+        uid = force_text(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+
+    if user is not None and default_token_generator.check_token(user, token):
+        if request.method == 'POST':
+            new_password = request.POST['new_password']
+            user.set_password(new_password)
+            user.save()
+            messages.success(request, 'Password reset successful. You can now log in with your new password.')
+            return redirect('password_reset_complete')
+        return render(request, 'password_reset_confirm.html')
+    else:
+        messages.error(request, 'Invalid password reset link. Please try again.')
+        return redirect('password_reset')
+
+def password_reset_complete(request):
+    return render(request, 'password_reset_complete.html')
+
+from django.contrib.auth.tokens import default_token_generator
+
+def forgot_password(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        user = User.objects.filter(email=email).first()
+        if user is not None:
+            # Generate a password reset link (using Django's built-in functionality)
+            # Example: This assumes you have configured the password reset URLs in your urls.py
+            uid = user.pk
+            token = default_token_generator.make_token(user)
+            reset_url = reverse('password_reset_confirm', kwargs={'uidb64': uid, 'token': token})
+
+            # Example email content using a template
+            subject = 'Password Reset Request'
+            message = f'Hi {user.first_name},\n\nPlease follow the link to reset your password:\n{request.build_absolute_uri(reset_url)}\n\nBest regards,\nYour Platform Team'
+            from_email = settings.EMAIL_HOST_USER
+            recipient_list = [email]
+
+            try:
+                send_mail(subject, message, from_email, recipient_list)
+                messages.success(request, 'Password reset link sent. Please check your email.')
+                return redirect('login')  # Redirect to login page after sending email
+            except Exception as e:
+                messages.error(request, f'Failed to send email: {e}')
+                return redirect('forgot_password')
+
+        else:
+            messages.error(request, 'No user found with that email address.')
+            return redirect('forgot_password')
+    
+    return render(request, 'forgot_password.html') 
+
+def send_welcome_email(request):
+    subject = 'Welcome to Our Platform'
+    message = "Hi Thank you for registering at our site."
+    from_email =  config('EMAIL_HOST_USER')
+    recipient_list = ['asksr7372@gmail.com']
+    send_mail(subject, message, from_email, recipient_list)
+    return HttpResponse("Sent")
+from django.template.loader import render_to_string
+
+
 @login_required
 def bulk_student_upload(request):
     if request.method == 'POST' and request.FILES.get('csv_file'):
@@ -187,12 +290,26 @@ def bulk_student_upload(request):
             df = df.applymap(lambda x: x.strip() if isinstance(x, str) else x)
             institute_profile = InstituteProfile.objects.get(user=request.user)
             role = 'student'
-            # Convert DataFrame to list of dictionaries
             for index, row in df.iterrows():
                 email = row['Email']
                 first_name = row['First_Name']
                 last_name = row['Last_Name']
                 username = row['Username']
+                
+                if email=="dikayan601@calunia.com":
+                    subject = 'Welcome to PlaceCom'
+                    from_email = config('EMAIL_HOST_USER')
+                    recipient_list = [email]
+
+                    # Render the email body using a template
+                    message = render_to_string('welcome_email.html', {
+                        'first_name': first_name,
+                        'username': email,
+                        'password': password,
+                    })
+
+       
+                    send_mail(subject, message, from_email, recipient_list, html_message=message)
                 
                 if email == "":
                     break
@@ -517,16 +634,16 @@ def send_request(request, institute_id):
         institute = get_object_or_404(InstituteProfile, pk=institute_id)
         request_type = 'recruiter_to_institute'
         
-        # Check if a similar request already exists
+        # Check if a similar request already exists and is pending or accepted
         existing_request = Request.objects.filter(
             Q(sender=request.user, receiver=institute.user) |
             Q(sender=institute.user, receiver=request.user),
             request_type=request_type,
-            status='pending'
+            status__in=['pending', 'accepted']  # Check for pending or accepted status
         ).exists()
         
         if existing_request:
-            messages.warning(request, 'Request already sent. Please wait for a response.')
+            messages.warning(request, 'Request already sent or accepted. Please wait for a response.')
         else:
             # Create a new request
             request_obj = Request.objects.create(
@@ -721,3 +838,51 @@ def edit_recruiter_profile(request):
         'recruiter_profile': recruiter_profile,
     }
     return render(request, 'recruiter/edit_recruiter_profile.html', context)
+
+
+
+@login_required
+def institute_received_requests(request):
+    institute = request.user.institute_profile
+    requests = Request.objects.filter(receiver=request.user)
+    context = {
+        'institute': institute,
+        'requests': requests,
+    }
+    return render(request, 'institute/institute_received_requests.html', context)
+
+@login_required
+def recruiter_received_requests(request):
+    recruiter = request.user.recruiter_profile
+    requests = Request.objects.filter(receiver=request.user)
+    context = {
+        'recruiter': recruiter,
+        'requests': requests,
+    }
+    return render(request, 'recruiter/recruiter_received_requests.html', context)
+
+@login_required
+def manage_institute_request(request, request_id):
+    req = get_object_or_404(Request, id=request_id)
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        if action == 'accept':
+            req.status = 'accepted'
+        elif action == 'decline':
+            req.status = 'declined'
+        req.save()
+        messages.success(request, 'Request updated successfully.')
+        return redirect('institute_received_requests')
+
+@login_required
+def manage_recruiter_request(request, request_id):
+    req = get_object_or_404(Request, id=request_id)
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        if action == 'accept':
+            req.status = 'accepted'
+        elif action == 'decline':
+            req.status = 'declined'
+        req.save()
+        messages.success(request, 'Request updated successfully.')
+        return redirect('recruiter_received_requests')

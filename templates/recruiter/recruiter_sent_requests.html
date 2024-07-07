@@ -1,0 +1,40 @@
+{% extends 'recruiter/base_recruiter.html' %}
+
+{% block title %}Recruiter Sent Requests{% endblock %}
+{% block brand %}Recruiter Dashboard{% endblock %}
+{% block user_name %}{{ recruiter.organization_name }}{% endblock %}
+{% block header %}Sent Requests{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <table id="sentRequestsTable" class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Recipient</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for request in sent_requests %}
+                                <tr>
+                                    <td>{{ request.recipient.instituteprofile.institute_name }}</td>
+                                    <td>{{ request.get_status_display }}</td>
+                                </tr>
+                            {% empty %}
+                                <tr>
+                                    <td colspan="2">No requests sent.</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

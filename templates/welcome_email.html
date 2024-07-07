@@ -1,0 +1,87 @@
+<!-- templates/welcome_email.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Welcome to PlaceCom</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            background-color: #1F2937;
+            padding: 20px;
+            border-radius: 10px 10px 0 0;
+            color: #ffffff;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        .content {
+            padding: 20px;
+        }
+        .content p {
+            font-size: 16px;
+            line-height: 1.5;
+            color: #333333;
+        }
+        .button-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .button {
+            background-color: #F0BC74;
+            color: #ffffff;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 14px;
+            color: #777777;
+        }
+        .footer a {
+            color: #1F2937;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Welcome to PlaceCom!</h1>
+        </div>
+        <div class="content">
+            <p>Hi {{ first_name }},</p>
+            <p>We are excited to welcome you to our platform. Your institute is now part of our placement management system.</p>
+            <p>Here are your login credentials:</p>
+            <p><strong>Username:</strong> {{ username }}</p>
+            <p><strong>Password:</strong> {{ password }}</p>
+            <div class="button-container">
+                <a href="http://yourwebsite.com/login" class="button">Visit Our Website</a>
+            </div>
+            <p>Thank you for registering with us. We are thrilled to have you on board!</p>
+            <p>Best regards,<br>Your PlaceCom Team</p>
+        </div>
+        <div class="footer">
+            <p>If you have any questions, feel free to <a href="mailto:support@placecom.com">contact us</a>.</p>
+        </div>
+    </div>
+</body>
+</html>

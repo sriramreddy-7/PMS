@@ -1,0 +1,40 @@
+{% extends 'institute/base_institute.html' %}
+
+{% block title %}Institute Sent Requests{% endblock %}
+{% block brand %}Institute Dashboard{% endblock %}
+{% block user_name %}{{ institute.institute_name }}{% endblock %}
+{% block header %}Sent Requests{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <table id="sentRequestsTable" class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Recipient</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for request in sent_requests %}
+                                <tr>
+                                    <td>{{ request.recipient.recruiter_profile.organization_name }}</td>
+                                    <td>{{ request.get_status_display }}</td>
+                                </tr>
+                            {% empty %}
+                                <tr>
+                                    <td colspan="2">No requests sent.</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

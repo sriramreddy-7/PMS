@@ -17,6 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from accounts import views
+from django.contrib.auth import views as auth_views
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -67,6 +68,24 @@ urlpatterns = [
     path('view_shared_students/<int:institute_id>/', views.view_shared_students, name='view_shared_students'),
     path('recruiter_student_profile/<str:username>/', views.recruiter_student_profile, name='recruiter_student_profile'),
     path('institute_profile/<int:institute_id>/', views.institute_profile, name='institute_profile'),
+    
+    path('send_welcome_email', views.send_welcome_email, name='send_welcome_email'),
+    
+    
+    ##### Requests:
+    path('institute_received-requests/', views.institute_received_requests, name='institute_received_requests'),
+    path('recruiter_received-requests/', views.recruiter_received_requests, name='recruiter_received_requests'),
+    path('institute_manage_request/<int:request_id>/', views.manage_institute_request, name='manage_institute_request'),
+    path('recruiter_manage_request/<int:request_id>/', views.manage_recruiter_request, name='manage_recruiter_request'),
+    
+    
+    
+    ##password reset
+    path('password_reset/', views.password_reset_request, name='password_reset'),
+    path('password_reset/done/', views.password_reset_done, name='password_reset_done'),
+    path('reset/<uidb64>/<token>/', views.password_reset_confirm, name='password_reset_confirm'),
+    path('reset/done/', views.password_reset_complete, name='password_reset_complete'),
+    path('forgot_password/', views.forgot_password, name='forgot_password'),
 
     
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

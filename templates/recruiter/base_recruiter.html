@@ -18,75 +18,95 @@
                     <a class="nav-link" data-widget="pushmenu" href="#"><i class="fas fa-bars"></i></a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
-                    <a href="{% url 'recruiter_dashboard' %}" class="nav-link"><strong>Welcome Recruiter Dashboard</strong></a>
+                    <a href="{% url 'recruiter_dashboard' %}" class="nav-link"><strong>Welcome Recruiter
+                            Dashboard</strong></a>
                 </li>
             </ul>
         </nav>
 
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <a href="{% url 'recruiter_dashboard' %}" class="brand-link">
-            
+
                 <span class="brand-text font-weight">&nbsp; PMS Recruiter</span>
             </a>
 
             <div class="sidebar">
-                <div class="user-panel mt-3 pb-3 mb-3 d-flex">  
+                <div class="user-panel mt-3 pb-3 mb-3 d-flex">
                     <div class="image">
                         <img src="{{ recruiter_profile.logo.url }}" class="img-circle elevation-2" alt="recruiter logo">
-                    </div>                 
+                    </div>
                     <div class="info">
-                        <a href="{% url 'recruiter_dashboard' %}" class="d-block"><strong>{{ request.user.first_name }} {{ request.user.last_name }}</strong></a>
+                        <a href="{% url 'recruiter_dashboard' %}" class="d-block"><strong>{{ request.user.first_name }}
+                                {{ request.user.last_name }}</strong></a>
                     </div>
                 </div>
 
-               
 
-              <nav class="mt-2">
-    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-        <li class="nav-item">
-            <a href="{% url 'recruiter_dashboard' %}" class="nav-link">
-                <i class="nav-icon fas fa-tachometer-alt"></i>
-                <p>Dashboard</p>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a href="{% url 'recruiter_profile' %}" class="nav-link">
-                <i class="nav-icon fas fa-user"></i>
-                <p>Profile</p>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a href="" class="nav-link">
-                <i class="nav-icon fas fa-briefcase"></i>
-                <p>Job Postings</p>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a href="" class="nav-link">
-                <i class="nav-icon fas fa-envelope"></i>
-                <p>Requests</p>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a href="{% url 'institute_list' %}" class="nav-link">
-                <i class="nav-icon fas fa-university"></i>
-                <p>Institute List</p>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a href="{% url 'list_shared_students' %}" class="nav-link">
-                <i class="nav-icon fas fa-users"></i>
-                <p>Shared Details</p>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a href="{% url 'logout' %}" class="nav-link">
-                <i class="nav-icon fas fa-sign-out-alt"></i>
-                <p>Logout</p>
-            </a>
-        </li>
-    </ul>
-</nav>
+
+                <nav class="mt-2">
+                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
+                        data-accordion="false">
+                        <li class="nav-item">
+                            <a href="{% url 'recruiter_dashboard' %}" class="nav-link">
+                                <i class="nav-icon fas fa-tachometer-alt"></i>
+                                <p>Dashboard</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'recruiter_profile' %}" class="nav-link">
+                                <i class="nav-icon fas fa-user"></i>
+                                <p>Profile</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="" class="nav-link">
+                                <i class="nav-icon fas fa-briefcase"></i>
+                                <p>Job Postings</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fas fa-envelope"></i>
+                                <p>
+                                    Requests
+                                    <i class="fas fa-angle-left right"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="" class="nav-link">
+                                        <i class="fas fa-paper-plane nav-icon"></i> <!-- Icon for Sent -->
+                                        <p>Sent</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{% url 'recruiter_received_requests' %}" class="nav-link">
+                                        <i class="fas fa-inbox nav-icon"></i> <!-- Icon for Received -->
+                                        <p>Received</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{% url 'institute_list' %}" class="nav-link">
+                                        <i class="nav-icon fas fa-university"></i>
+                                        <p>Institute List</p>
+                                    </a>
+                                </li>
+                                </ul>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{% url 'list_shared_students' %}" class="nav-link">
+                                        <i class="nav-icon fas fa-users"></i>
+                                        <p>Shared Details</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{% url 'logout' %}" class="nav-link">
+                                        <i class="nav-icon fas fa-sign-out-alt"></i>
+                                        <p>Logout</p>
+                                    </a>
+                                </li>
+                            </ul>
+                </nav>
 
             </div>
         </aside>
