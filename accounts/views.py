@@ -7,6 +7,10 @@ from .models import RecruiterProfile, InstituteProfile, Profile, StudentProfile,
 import pandas as pd
 from django.db.models import Q
 # Create your views here.
+
+def test(request):
+    return render(request, 'test.html')
+
 def index(request):
     return render(request, 'index.html')
 
@@ -39,9 +43,16 @@ def institute_dashboard(request):
         return redirect('login')
     else:
         institute_profile = get_object_or_404(InstituteProfile, user=request.user)
-        context={
-            'institute_profile':institute_profile,
-        }
+        job_openings = JobOpening.objects.filter(institute=institute_profile)
+        sent_requests = Request.objects.filter(sender=request.user)
+        received_requests = Request.objects.filter(receiver=request.user)
+    
+    context = {
+        'institute_profile': institute_profile,
+        'job_openings': job_openings,
+        'sent_requests': sent_requests,
+        'received_requests': received_requests,
+    } 
     return render(request, 'institute/dashboard.html',context)
 
 

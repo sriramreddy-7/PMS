@@ -1,12 +1,88 @@
 {% extends 'institute/base_institute.html' %}
+{% load static %}
 
 {% block title %}Institute Dashboard{% endblock %}
 {% block brand %}Institute Dashboard{% endblock %}
-{% block user_name %}Institute Name{% endblock %}
-
+{% block user_name %}{{ institute_profile.institute_name }}{% endblock %}
 
 {% block content %}
-<div class="row">
-   <h1>Hello</h1>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title"><strong>Profile Information</strong></h5>
+                    <br>
+                    <p><strong>Institute Name:</strong> {{ institute_profile.institute_name }} &nbsp; <strong>Website:</strong> <a href="{{ institute_profile.website }}" target="_blank">{{ institute_profile.website }}</a> &nbsp; <strong>Location:</strong> {{ institute_profile.location }} &nbsp; <strong>Contact Number:</strong> {{ institute_profile.contact_number }}</p>
+                    <!-- {% if institute_profile.logo %}
+                    <img src="{{ institute_profile.logo.url }}" alt="Institute Logo" class="img-fluid">
+                    {% endif %} -->
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Job Openings</h5>
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Status</th>
+                                    <th>Posted Date</th>
+                                    <th>Deadline</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for job in job_openings %}
+                                <tr>
+                                    <td>{{ job.title }}</td>
+                                    <td>{{ job.get_status_display }}</td>
+                                    <td>{{ job.posted_date|date:"d-M-Y" }}</td>
+                                    <td>{{ job.deadline|date:"d-M-Y" }}</td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="4">No job openings.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title">Sent Requests</h5>
+                            <ul class="list-group list-group-flush">
+                                {% for request in sent_requests %}
+                                <li class="list-group-item">{{ request.get_request_type_display }} - Status: {{ request.get_status_display }}</li>
+                                {% empty %}
+                                <li class="list-group-item">No sent requests.</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title">Received Requests</h5>
+                            <ul class="list-group list-group-flush">
+                                {% for request in received_requests %}
+                                <li class="list-group-item">{{ request.get_request_type_display }} - Status: {{ request.get_status_display }}</li>
+                                {% empty %}
+                                <li class="list-group-item">No received requests.</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}

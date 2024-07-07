@@ -39,6 +39,7 @@ class StudentProfile(models.Model):
 
     def __str__(self):
         return f'{self.user.username} - Student'
+    
 
 class RecruiterProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='recruiter_profile')
@@ -108,3 +109,30 @@ class Request(models.Model):
 
     def __str__(self):
         return f'{self.get_request_type_display()} - {self.sender.username} -> {self.receiver.username}'
+    
+    
+    
+class Skill(models.Model):
+    SKILL_CHOICES = [
+        ('Python', 'Python'),
+        ('Java', 'Java'),
+        ('JavaScript', 'JavaScript'),
+        ('C++', 'C++'),
+        ('Ruby', 'Ruby'),
+        ('PHP', 'PHP'),
+        ('HTML/CSS', 'HTML/CSS'),
+        ('SQL', 'SQL'),
+        ('Data Analysis', 'Data Analysis'),
+        ('Machine Learning', 'Machine Learning'),
+        ('UI/UX Design', 'UI/UX Design'),
+        ('Project Management', 'Project Management'),
+        ('Leadership', 'Leadership'),
+        ('Communication', 'Communication'),
+        ('Problem Solving', 'Problem Solving'),
+        ('Teamwork', 'Teamwork'),
+    ]
+    student = models.ForeignKey(StudentProfile, on_delete=models.CASCADE, related_name='skills')
+    skill = models.CharField(max_length=100, choices=SKILL_CHOICES)
+
+    def __str__(self):
+        return self.skill   

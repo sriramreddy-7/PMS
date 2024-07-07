@@ -8,10 +8,22 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
     <!-- Custom styles -->
     <style>
-        /* Add your custom styles here */
+        body {
+            background-color: #F0BC74;
+            color: #1F2937;
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
         .container {
             max-width: 400px;
-            margin-top: 100px;
+            background-color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
         .btn-primary {
             background-color: #1F2937;
@@ -20,6 +32,13 @@
         .btn-primary:hover {
             background-color: #0E141E;
             border-color: #0E141E;
+        }
+        .text-center a {
+            color: #1F2937;
+            text-decoration: none;
+        }
+        .text-center a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
@@ -37,7 +56,7 @@
             {% csrf_token %}
             <div class="form-group">
                 <label for="username">Email address</label>
-                <input type="text" class="form-control" id="username" name="username"  placeholder="Enter email or username">
+                <input type="text" class="form-control" id="username" name="username" placeholder="Enter email or username">
             </div>
             <div class="form-group">
                 <label for="password">Password</label>
