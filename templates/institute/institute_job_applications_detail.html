@@ -1,0 +1,42 @@
+{% extends 'institute/base_institute.html' %}
+
+{% block title %}PMS Job Applications Detail{% endblock %}
+
+{% block content %}
+<main class="content">
+    <div class="container-fluid mt-4">
+        <div class="row">
+            <div class="col-lg-12">
+                <h2 class="h5 mb-4">Job Applications for {{ job_opening.title }} - {{ job_opening.company }}</h2>
+
+                {% if applications %}
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <table class="table table-bordered">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th>Application ID</th>
+                                        <th>Student Name</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for application in applications %}
+                                        <tr>
+                                            <td>{{ application.id }}</td>
+                                            <td><a href="{% url 'student_profile' application.student.user.username %}">{{ application.student.user.get_full_name }}</a></td>
+                                            <td>{{ application.get_status_display }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                {% else %}
+                    <p>No applications found for this job.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}

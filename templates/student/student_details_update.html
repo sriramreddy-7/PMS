@@ -38,10 +38,9 @@
                         </div>
                         <div class="form-group">
                             <label for="resume">Resume</label>
+                             <input type="file" id="resume" name="resume" class="form-control-file">
                             {% if student.resume %}
                                 <p><a href="{{ student.resume.url }}" target="_blank">View Resume</a></p>
-                            {% else %}
-                                <input type="file" id="resume" name="resume" class="form-control-file">
                             {% endif %}
                         </div>
                         <div class="form-group">

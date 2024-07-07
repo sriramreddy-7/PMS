@@ -23,7 +23,7 @@ class InstituteProfile(models.Model):
     state = models.CharField(max_length=100, blank=True, null=True, default=None)
     country = models.CharField(max_length=100, blank=True, null=True, default=None)
     logo = models.ImageField(upload_to='institute_logos/', blank=True, null=True, default=None)
-
+    
     def __str__(self):
         return self.institute_name
     

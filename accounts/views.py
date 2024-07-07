@@ -66,6 +66,7 @@ def institute_dashboard(request):
         'job_openings': job_openings,
         'sent_requests': sent_requests,
         'received_requests': received_requests,
+        'institute_profile':institute_profile,
     } 
     return render(request, 'institute/dashboard.html',context)
 
@@ -270,6 +271,7 @@ from django.template.loader import render_to_string
 
 @login_required
 def bulk_student_upload(request):
+    institute_profile = get_object_or_404(InstituteProfile, user=request.user)
     if request.method == 'POST' and request.FILES.get('csv_file'):
         csv_file = request.FILES['csv_file']
         password = request.POST.get('password')
@@ -282,8 +284,6 @@ def bulk_student_upload(request):
         try:
             # Read CSV file into pandas DataFrame
             df = pd.read_csv(csv_file)
-
-            # Normalize column names by stripping leading/trailing spaces
             df.columns = df.columns.str.strip()
 
             # Strip leading/trailing spaces from all data
@@ -348,9 +348,9 @@ def bulk_student_upload(request):
 
         except Exception as e:
             error_message = f'Error processing CSV file: {str(e)}'
-            return render(request, 'institute/bulk_student_upload.html', {'error_message': error_message})
+            return render(request, 'institute/bulk_student_upload.html', {'error_message': error_message,'institute_profile':institute_profile})
 
-    return render(request, 'institute/bulk_student_upload.html')
+    return render(request, 'institute/bulk_student_upload.html', {'institute_profile':institute_profile})
 
 @login_required
 def student_details(request):
@@ -411,9 +411,14 @@ def student_details_update(request):
         # Display success message and redirect to student dashboard
         messages.success(request, 'Your profile has been updated successfully!')
         return redirect('student_dashboard')
-
+    student=student_profile
+    context={
+        'student_profile':student_profile,
+        "student":student,
+        
+    }
     # Render the update profile form with current profile data
-    return render(request, 'student/update_profile.html', {'student_profile': student_profile})
+    return render(request, 'student/student_details_update.html', context)
 
 
 def all_recruiters(request):
@@ -424,8 +429,13 @@ def all_recruiters(request):
     return render(request, 'institute/all_recruiters.html', context)
 
 
+
 @login_required
 def post_job_opening(request):
+    institute_profile = get_object_or_404(InstituteProfile, user=request.user)
+    context = {
+        'institute_profile': institute_profile,
+    }
     if request.method == 'POST':
         title = request.POST.get('title')
         description = request.POST.get('description')
@@ -450,7 +460,7 @@ def post_job_opening(request):
         messages.success(request, 'Job opening posted successfully.')
         return redirect('institute_job_data')  # Redirect to institute dashboard
     
-    return render(request, 'institute/institute_post_job.html')
+    return render(request, 'institute/institute_post_job.html', context)
 
 def institute_job_data(request):
     # Retrieve job openings for the current institute
@@ -479,6 +489,7 @@ def institute_job_data(request):
 
 def edit_job(request, job_id):
     job = get_object_or_404(JobOpening, id=job_id)
+    institute_profile = get_object_or_404(InstituteProfile, user=request.user)
     if request.method == 'POST':
         job.title = request.POST.get('title')
         job.company = request.POST.get('company')
@@ -490,7 +501,8 @@ def edit_job(request, job_id):
         job.save()
         return redirect('institute_job_data')
     context = {
-        'job': job
+        'job': job,
+        'institute_profile': institute_profile,
     }
     return render(request, 'institute/institute_job_data.html', context)
 
@@ -505,14 +517,21 @@ def student_job_openings(request):
     student_profile = StudentProfile.objects.get(user=request.user)
     print(student_profile.institute)
     job_openings = JobOpening.objects.filter(institute=student_profile.institute, status='open')
-    return render(request, 'student/student_job_openings.html', {'job_openings': job_openings})
+    student=student_profile
+    context = {
+        'job_openings': job_openings,
+        'student':student,
+    }
+    return render(request, 'student/student_job_openings.html', context)
 
 
 @login_required
 def student_job_applications(request):
     student_profile = StudentProfile.objects.get(user=request.user)
     applications = JobApplication.objects.filter(student=student_profile)
-    job_openings = JobOpening.objects.filter(institute=student_profile.institute, status='open')
+    job_openings = JobOpening.objects.filter(institute=student_profile.institute, status='open').exclude(
+        id__in=applications.values_list('job_opening_id', flat=True)
+    )
 
     if request.method == 'POST':
         application_id = request.POST.get('application_id')
@@ -534,36 +553,77 @@ def student_job_applications(request):
             messages.success(request, 'New job application added successfully.')
 
         return redirect('student_job_applications')
+    student=student_profile
+    context = {
+        'applications': applications,
+        'job_openings': job_openings,
+        'student':student,
+    }
 
-    return render(request, 'student/student_job_applications.html', {'applications': applications, 'job_openings': job_openings})
+    return render(request, 'student/student_job_applications.html',context)
+
+
+
+
+def institute_student_off_campus_jobs_status(request):
+    institute_profile = InstituteProfile.objects.get(user=request.user)
+    job_openings = JobOpening.objects.filter(institute=institute_profile, job_type='off_campus')
+
+    # Group applications by job and fetch their details
+    job_applications = JobApplication.objects.filter(job_opening__in=job_openings).select_related('job_opening')
+    jobs = {}
+
+    for application in job_applications:
+        job_id = application.job_opening.id
+        if job_id not in jobs:
+            jobs[job_id] = {
+                'job_opening': application.job_opening,
+                'applications': []
+            }
+        jobs[job_id]['applications'].append(application)
+
+    # Calculate the applied students count and percentage
+    for job in jobs.values():
+        job['applied_students_count'] = len(job['applications'])
+        total_students_applied_for_job = JobApplication.objects.filter(job_opening=job['job_opening']).count()
+        job['applied_percentage'] = (job['applied_students_count'] / total_students_applied_for_job) * 100 if total_students_applied_for_job > 0 else 0
+
+    context = {
+        'jobs': jobs,
+        'institute_profile': institute_profile,
+    }
+    return render(request, 'institute/institute_student_off_campus_jobs_status.html', context)
+
+
 
 
 
 @login_required
-def institute_student_off_campus_jobs_status(request):
+def institute_job_applications_detail(request, job_id):
     institute_profile = InstituteProfile.objects.get(user=request.user)
-    job_openings = JobOpening.objects.filter(institute=institute_profile, job_type='off_campus')
-    
-    # Group applications by company and fetch their statuses
-    job_applications = JobApplication.objects.filter(job_opening__in=job_openings).select_related('job_opening__institute')
-    companies = {}
-    for application in job_applications:
-        company_name = application.job_opening.company
-        if company_name not in companies:
-            companies[company_name] = []
-        companies[company_name].append(application)
+    job_opening = get_object_or_404(JobOpening, id=job_id, institute=institute_profile)
+    applications = JobApplication.objects.filter(job_opening=job_opening).select_related('student')
 
     context = {
-        'companies': companies
+        'job_opening': job_opening,
+        'applications': applications,
+        'institute_profile':institute_profile,
     }
-    return render(request, 'institute/institute_student_off_campus_jobs_status.html', context)
+    return render(request, 'institute/institute_job_applications_detail.html', context)
+
 
 
 
 def institute_job_applications(request, job_id):
     job = get_object_or_404(JobOpening, id=job_id)
     applications = JobApplication.objects.filter(job_opening=job)
-    return render(request, 'institute/institute_job_applications.html', {'job': job, 'applications': applications})
+    institute_profile = get_object_or_404(InstituteProfile, user=request.user)
+    context = {
+     'job': job,
+     'applications': applications, 
+        'institute_profile':institute_profile,
+    }
+    return render(request, 'institute/institute_job_applications.html', context)
 
 
 
@@ -606,9 +666,9 @@ def view_institute_profile(request):
     
     context = {
         'institute': institute_profile,
+        'institute_profile':institute_profile,
     }
     return render(request, 'institute/institute_details_view.html', context)
-
 
 
 
@@ -845,9 +905,11 @@ def edit_recruiter_profile(request):
 def institute_received_requests(request):
     institute = request.user.institute_profile
     requests = Request.objects.filter(receiver=request.user)
+    institute_profile=institute
     context = {
         'institute': institute,
         'requests': requests,
+        'institute_profile':institute_profile,
     }
     return render(request, 'institute/institute_received_requests.html', context)
 

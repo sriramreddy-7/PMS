@@ -68,7 +68,7 @@ urlpatterns = [
     path('view_shared_students/<int:institute_id>/', views.view_shared_students, name='view_shared_students'),
     path('recruiter_student_profile/<str:username>/', views.recruiter_student_profile, name='recruiter_student_profile'),
     path('institute_profile/<int:institute_id>/', views.institute_profile, name='institute_profile'),
-    
+    path('institute_job_applications_detail/<int:job_id>/', views.institute_job_applications_detail, name='institute_job_applications_detail'),
     path('send_welcome_email', views.send_welcome_email, name='send_welcome_email'),
     
     
