@@ -1,0 +1,38 @@
+{% extends 'institute/base_institute.html' %}
+{% block content %}
+<div class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <h2 class="mb-4">{{ job_opening.title }} - Applications</h2>
+                <div class="card">
+                    <div class="card-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Student Username</th>
+                                    <th>Application Date</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for application in job_applications %}
+                                <tr>
+                                    <td>{{ application.student.user.username }}</td>
+                                    <td>{{ application.application_date }}</td>
+                                    <td>{{ application.get_status_display }}</td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="3">No applications found.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

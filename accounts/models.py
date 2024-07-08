@@ -36,6 +36,7 @@ class StudentProfile(models.Model):
     branch_specialization = models.CharField(max_length=100, blank=True, null=True,default=None)
     year_of_passout = models.IntegerField(blank=True, null=True,default=None)
     profile_picture = models.ImageField(upload_to='profile_pics/', blank=True, null=True, default=None)
+    cgpa = models.FloatField(blank=True, null=True, default=None)
 
     def __str__(self):
         return f'{self.user.username} - Student'

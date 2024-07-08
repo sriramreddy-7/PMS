@@ -18,48 +18,63 @@
                         {% csrf_token %}
                         <div class="form-group">
                             <label for="first_name">First Name</label>
-                            <input type="text" class="form-control" id="first_name" name="first_name" value="{{ student.user.first_name }}" disabled>
+                            <input type="text" class="form-control" id="first_name" name="first_name" value="{{ student_profile.user.first_name }}" disabled>
                         </div>
                         <div class="form-group">
                             <label for="last_name">Last Name</label>
-                            <input type="text" class="form-control" id="last_name" name="last_name" value="{{ student.user.last_name }}" disabled>
+                            <input type="text" class="form-control" id="last_name" name="last_name" value="{{ student_profile.user.last_name }}" disabled>
                         </div>
                         <div class="form-group">
                             <label for="username">Username</label>
-                            <input type="text" class="form-control" id="username" name="username" value="{{ student.user.username }}" disabled>
+                            <input type="text" class="form-control" id="username" name="username" value="{{ student_profile.user.username }}" disabled>
                         </div>
                         <div class="form-group">
                             <label for="email">Email</label>
-                            <input type="email" class="form-control" id="email" name="email" value="{{ student.user.email }}" disabled>
+                            <input type="email" class="form-control" id="email" name="email" value="{{ student_profile.user.email }}" disabled>
                         </div>
                         <div class="form-group">
                             <label for="contact_number">Contact Number</label>
-                            <input type="text" class="form-control" id="contact_number" name="contact_number" value="{{ student.contact_number }}">
+                            <input type="text" class="form-control" id="contact_number" name="contact_number" value="{{ student_profile.contact_number }}">
                         </div>
                         <div class="form-group">
                             <label for="resume">Resume</label>
-                             <input type="file" id="resume" name="resume" class="form-control-file">
-                            {% if student.resume %}
-                                <p><a href="{{ student.resume.url }}" target="_blank">View Resume</a></p>
+                            <input type="file" id="resume" name="resume" class="form-control-file">
+                            {% if student_profile.resume %}
+                                <p><a href="{{ student_profile.resume.url }}" target="_blank">View Resume</a></p>
                             {% endif %}
                         </div>
                         <div class="form-group">
                             <label for="degree">Degree</label>
-                            <input type="text" class="form-control" id="degree" name="degree" value="{{ student.degree }}">
+                            <input type="text" class="form-control" id="degree" name="degree" value="{{ student_profile.degree }}">
                         </div>
                         <div class="form-group">
                             <label for="branch_specialization">Branch Specialization</label>
-                            <input type="text" class="form-control" id="branch_specialization" name="branch_specialization" value="{{ student.branch_specialization }}">
+                            <input type="text" class="form-control" id="branch_specialization" name="branch_specialization" value="{{ student_profile.branch_specialization }}">
                         </div>
                         <div class="form-group">
                             <label for="year_of_passout">Year of Passout</label>
-                            <input type="number" class="form-control" id="year_of_passout" name="year_of_passout" value="{{ student.year_of_passout }}">
+                            <input type="number" class="form-control" id="year_of_passout" name="year_of_passout" value="{{ student_profile.year_of_passout }}">
+                        </div>
+                        <div class="form-group">
+                            <label for="cgpa">CGPA</label>
+                            <input type="text" class="form-control" id="cgpa" name="cgpa" value="{{ student_profile.cgpa }}">
+                        </div>
+                        <div class="form-group">
+                            <label>Skills</label>
+                            <div>
+                                {% for skill, skill_display in SKILL_CHOICES %}
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="skills" id="skill_{{ forloop.counter }}" value="{{ skill }}" {% if skill in student_skills %}checked{% endif %}>
+                                        <label class="form-check-label" for="skill_{{ forloop.counter }}">{{ skill_display }}</label>
+                                    </div>
+                                {% endfor %}
+                            </div>
                         </div>
                         <div class="form-group">
                             <label for="profile_picture">Profile Picture</label>
                             <input type="file" class="form-control-file" id="profile_picture" name="profile_picture">
-                            {% if student.profile_picture %}
-                                <small class="form-text text-muted">Current Picture: <a href="{{ student.profile_picture.url }}" target="_blank">View</a></small>
+                            {% if student_profile.profile_picture %}
+                                <small class="form-text text-muted">Current Picture: <a href="{{ student_profile.profile_picture.url }}" target="_blank">View</a></small>
                             {% endif %}
                         </div>
                         <button type="submit" class="btn btn-primary">Update</button>

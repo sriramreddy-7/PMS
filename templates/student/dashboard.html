@@ -2,56 +2,98 @@
 
 {% block title %}Student Dashboard{% endblock %}
 
-
 {% block content %}
-<!-- <div class="row">
-    <div class="col-lg-3 col-6">
-        <div class="small-box bg-info">
-            <div class="inner">
-                <h3>3</h3>
-                <p>Job Applications</p>
+<div class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card mb-4">
+          <div class="card-header">
+            <h5 class="card-title">Student Profile</h5>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              {% if student_profile.profile_picture %}
+              <div class="col-md-4">
+                <img src="{{ student_profile.profile_picture.url }}" alt="Profile Picture" class="img-thumbnail rounded-circle" style="max-width: 150px;">
+              </div>
+              {% endif %}
+              <div class="col-md-8">
+                <div class="row">
+                  <div class="col-md-4"><strong>Name:</strong></div>
+                  <div class="col-md-8">{{ student_profile.user.get_full_name }}</div>
+                </div>
+                <div class="row">
+                  <div class="col-md-4"><strong>Email:</strong></div>
+                  <div class="col-md-8">{{ student_profile.user.email }}</div>
+                </div>
+                <div class="row">
+                  <div class="col-md-4"><strong>Contact Number:</strong></div>
+                  <div class="col-md-8">{{ student_profile.contact_number }}</div>
+                </div>
+                <div class="row">
+                  <div class="col-md-4"><strong>Institute:</strong></div>
+                  <div class="col-md-8">{{ student_profile.institute.institute_name }}</div>
+                </div>
+                <div class="row">
+                  <div class="col-md-4"><strong>Degree:</strong></div>
+                  <div class="col-md-8">{{ student_profile.degree }}</div>
+                </div>
+                <div class="row">
+                  <div class="col-md-4"><strong>Branch Specialization:</strong></div>
+                  <div class="col-md-8">{{ student_profile.branch_specialization }}</div>
+                </div>
+                <div class="row">
+                  <div class="col-md-4"><strong>Year of Passout:</strong></div>
+                  <div class="col-md-8">{{ student_profile.year_of_passout }}</div>
+                </div>
+              </div>
             </div>
-            <div class="icon">
-                <i class="ion ion-bag"></i>
-            </div>
-            <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+          </div>
         </div>
-    </div>
-    <div class="col-lg-3 col-6">
-        <div class="small-box bg-success">
-            <div class="inner">
-                <h3>5</h3>
-                <p>Interviews Scheduled</p>
-            </div>
-            <div class="icon">
-                <i class="ion ion-stats-bars"></i>
-            </div>
-            <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+
+        <div class="card mb-4">
+          <div class="card-header">
+            <h5 class="card-title">Skills</h5>
+          </div>
+          <div class="card-body">
+            <ul>
+              {% for skill in skills %}
+              <li>{{ skill.skill }}</li>
+              {% endfor %}
+            </ul>
+          </div>
         </div>
-    </div>
-    <div class="col-lg-3 col-6">
-        <div class="small-box bg-warning">
-            <div class="inner">
-                <h3>7</h3>
-                <p>Job Postings Viewed</p>
-            </div>
-            <div class="icon">
-                <i class="ion ion-person-add"></i>
-            </div>
-            <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+
+        <div class="card mb-4">
+          <div class="card-header">
+            <h5 class="card-title">Job Applications</h5>
+          </div>
+          <div class="card-body">
+            <table class="table table-bordered">
+              <thead class="thead-light">
+                <tr>
+                  <th>Job Title</th>
+                  <th>Company</th>
+                  <th>Application Date</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for application in job_applications %}
+                <tr>
+                  <td>{{ application.job_opening.title }}</td>
+                  <td>{{ application.job_opening.company }}</td>
+                  <td>{{ application.application_date }}</td>
+                  <td>{{ application.get_status_display }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
         </div>
+      </div>
     </div>
-    <div class="col-lg-3 col-6">
-        <div class="small-box bg-danger">
-            <div class="inner">
-                <h3>10</h3>
-                <p>Notifications</p>
-            </div>
-            <div class="icon">
-                <i class="ion ion-pie-graph"></i>
-            </div>
-            <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-        </div>
-    </div>
-</div> -->
+  </div>
+</div>
 {% endblock %}

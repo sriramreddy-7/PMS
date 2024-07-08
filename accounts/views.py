@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login as auth_login, logout
 from django.contrib.auth.decorators import login_required
 from .models import RecruiterProfile, InstituteProfile, Profile, StudentProfile, JobOpening, JobApplication, Request
+from .models import Skill
 import pandas as pd
 from django.db.models import Q
 from django.utils.dateparse import parse_date
@@ -43,8 +44,15 @@ def student_dashboard(request):
         return redirect('login')
     else:
         student = get_object_or_404(StudentProfile, user__username=request.user.username)
+        student_profile =student
+        job_applications = JobApplication.objects.filter(student=student_profile)
+        skills = Skill.objects.filter(student=student_profile)
+        
         context = {
-            'student': student,
+            'student_profile': student_profile,
+            'job_applications': job_applications,
+            'skills': skills,
+            'student':student,
         }
         return render(request, 'student/dashboard.html',context)
 
@@ -375,9 +383,11 @@ def student_profile(request, username):
     print("he")
     institute_profile = get_object_or_404(InstituteProfile, user=request.user)
     student = get_object_or_404(StudentProfile, user__username=username)
+    student_skills = student.skills.values_list('skill', flat=True)
     context = {
         'institute_profile': institute_profile,
         'student': student,
+        'student_skills':student_skills,
     }
     return render(request, 'institute/student_profile.html', context)
 
@@ -385,49 +395,99 @@ def student_profile(request, username):
 def student_account(request, username):
     print("she")
     student = get_object_or_404(StudentProfile, user__username=username)
+    student_skills = student.skills.values_list('skill', flat=True)
     context = {
         'student': student,
+         'student_skills': student_skills,
     }
     return render(request, 'student/student_account.html', context)
 
 @login_required
 def student_details_update(request):
     student_profile = request.user.student_profile
+
     if request.method == 'POST':
         # Update fields based on form data
         student_profile.degree = request.POST.get('degree', '')
         student_profile.branch_specialization = request.POST.get('branch_specialization', '')
         student_profile.year_of_passout = request.POST.get('year_of_passout', '')
         student_profile.contact_number = request.POST.get('contact_number', '')
-        student_profile.resume = request.FILES.get('resume', student_profile.resume)
-        
+        student_profile.cgpa = request.POST.get('cgpa', '')
+
         # Check if a new profile picture is uploaded
         if 'profile_picture' in request.FILES:
             student_profile.profile_picture = request.FILES['profile_picture']
 
+        # Check if a new resume is uploaded
+        if 'resume' in request.FILES:
+            student_profile.resume = request.FILES['resume']
+
         # Save the updated profile
         student_profile.save()
+
+        # Update skills
+        selected_skills = request.POST.getlist('skills')
+        Skill.objects.filter(student=student_profile).delete()
+        for skill in selected_skills:
+            Skill.objects.create(student=student_profile, skill=skill)
 
         # Display success message and redirect to student dashboard
         messages.success(request, 'Your profile has been updated successfully!')
         return redirect('student_dashboard')
-    student=student_profile
-    context={
-        'student_profile':student_profile,
-        "student":student,
-        
+
+    # Retrieve current skills of the student
+    student_skills = student_profile.skills.values_list('skill', flat=True)
+
+    context = {
+        'student_profile': student_profile,
+        'SKILL_CHOICES': Skill.SKILL_CHOICES,
+        'student_skills': student_skills,
     }
+
     # Render the update profile form with current profile data
     return render(request, 'student/student_details_update.html', context)
 
 
 def all_recruiters(request):
     recruiters = RecruiterProfile.objects.all()
+    institute_profile = get_object_or_404(InstituteProfile, user=request.user)
     context = {
         'recruiters': recruiters,
+        'institute_profile': institute_profile,
     }
     return render(request, 'institute/all_recruiters.html', context)
 
+
+def institute_student_on_campus_jobs_status(request):
+    institute = get_object_or_404(InstituteProfile, user=request.user)
+    on_campus_jobs = JobOpening.objects.filter(institute=institute, job_type='on_campus')
+    institute_profile=institute
+    job_data = []
+    for job in on_campus_jobs:
+        application_count = JobApplication.objects.filter(job_opening=job).count()
+        job_data.append({
+            'job': job,
+            'application_count': application_count,
+        })
+    
+    context = {
+        'job_data': job_data,
+        'institute_profile':institute_profile,
+    }
+
+    return render(request, 'institute/institute_student_on_campus_jobs_status.html', context)
+
+
+def job_applications_on_campus_list(request, job_id):
+    job_opening = get_object_or_404(JobOpening, pk=job_id)
+    job_applications = JobApplication.objects.filter(job_opening=job_opening)
+    institute_profile=InstituteProfile.objects.get(user=request.user)
+    context = {
+        'job_opening': job_opening,
+        'job_applications': job_applications,
+        'institute_profile':institute_profile,
+    }
+    return render(request, 'institute/job_applications_on_campus_list.html', context)
 
 
 @login_required
@@ -466,7 +526,7 @@ def institute_job_data(request):
     # Retrieve job openings for the current institute
     institute = InstituteProfile.objects.get(user=request.user)
     job_openings = JobOpening.objects.filter(institute=institute)
-    
+    institute_profile=institute
     data = []
     for job in job_openings:
         total_applications = job.applications.count()  # Replace with actual related name for applications
@@ -484,6 +544,7 @@ def institute_job_data(request):
     context = {
         'job_openings': job_openings,
         'job_data': data,
+        'institute_profile':institute_profile,
     }
     return render(request, 'institute/institute_job_data.html', context)
 

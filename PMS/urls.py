@@ -72,6 +72,9 @@ urlpatterns = [
     path('send_welcome_email', views.send_welcome_email, name='send_welcome_email'),
     
     
+    path('institute_student_on_campus_jobs_status/', views.institute_student_on_campus_jobs_status, name='institute_student_on_campus_jobs_status'),
+    path('job_applications_on_campus_list/<int:job_id>/', views.job_applications_on_campus_list, name='job_applications_on_campus_list'),
+    
     ##### Requests:
     path('institute_received-requests/', views.institute_received_requests, name='institute_received_requests'),
     path('recruiter_received-requests/', views.recruiter_received_requests, name='recruiter_received_requests'),
