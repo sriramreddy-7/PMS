@@ -1017,28 +1017,27 @@ from django.contrib.auth.decorators import login_required
 @login_required
 def ats_search(request):
     recruiter = request.user.recruiter_profile
+    skill_choices = Skill.SKILL_CHOICES
+    recruiter_profile = recruiter
     context = {
         'recruiter': recruiter,
-        'recruiter_profile': recruiter,
+        'recruiter_profile': recruiter_profile,
+        'skill_choices': skill_choices,
     }
 
     if request.method == 'POST':
         try:
-            keywords_str = request.POST.get('keywords', '').strip()
-            keywords = [keyword.strip() for keyword in keywords_str.split(',') if keyword.strip()]
-
+            selected_skills = request.POST.getlist('skills')
+            
             matching_students = StudentProfile.objects.filter(
-                skills__skill__in=keywords
+                skills__skill__in=selected_skills
             ).distinct()
 
             context['matching_students'] = matching_students
-            context['keywords'] = keywords_str
-
-            for keyword in keywords:
-                print(keyword, end=", ")
+            context['selected_skills'] = selected_skills
 
         except Exception as e:
             # Handle exceptions if needed
-            print(f"Error processing keywords: {str(e)}")
+            print(f"Error processing skills: {str(e)}")
 
-    return render(request, 'recruiter/ats_search.html', context)
+    return render(request, 'recruiter/ats_search_2.html', context)

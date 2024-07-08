@@ -1,0 +1,129 @@
+{% extends 'recruiter/base_recruiter.html' %}
+{% block title %}ATS Search{% endblock %}
+{% block brand %}ATS Search{% endblock %}
+{% block content %}
+<div class="container-fluid">
+    <div class="card mt-3">
+        <div class="card-body">
+            <h2>Applicant Tracking System (ATS) Search</h2>
+            <form action="{% url 'ats_search' %}" method="POST">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="skills">Select Skills:</label><br>
+                    {% for skill in skill_choices %}
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input custom-checkbox" type="checkbox" id="skill_{{ forloop.counter }}" name="skills" value="{{ skill.0 }}">
+                            <label class="form-check-label" for="skill_{{ forloop.counter }}">{{ skill.1 }}</label>
+                        </div>
+                    {% endfor %}
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fa fa-search"></i> Search
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% if matching_students %}
+    <div class="container-fluid">
+        <div class="card mt-3">
+            <div class="card-body">
+                <hr>
+                <h3>Matching Students for Selected Skills</h3>
+                <div class="row">
+                    {% for student in matching_students %}
+                        <div class="col-md-12">
+                            <div class="card mb-3 shadow-sm">
+                                <div class="card-body d-flex align-items-center">
+                                    <div class="profile-picture mr-3">
+                                        <img src="{{ student.profile_picture.url }}" alt="Profile Picture" class="rounded-circle" style="width:100px;height:100px;">
+                                    </div>
+                                    <div class="student-details">
+                                        <h5 class="card-title">
+                                            {{ student.institute }} | <a href="{% url 'recruiter_student_profile' student.user.username %}">{{ student.user.username }}</a> |
+                                            {{ student.user.first_name }} {{ student.user.last_name }}  |
+                                            <span class="text-muted">Contact: {{ student.contact_number }}</span>
+                                        </h5>
+                                        <br>
+                                        <p class="card-text">
+                                            <a href="{{ student.resume.url }}" target="_blank" class="btn btn-sm btn-info">
+                                                <i class="fa fa-file-alt"></i> View Resume
+                                            </a>
+                                        </p>
+                                        <p class="card-text">
+                                            <strong>Skills:</strong>
+                                            <ul class="list-inline">
+                                                {% for skill in student.skills.all %}
+                                                    <li class="list-inline-item badge badge-primary">{{ skill.skill }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% else %}
+    <div class="container-fluid">
+        <div class="card mt-3">
+            <div class="card-body">
+                <p>No students found matching the selected skills.</p>
+            </div>
+        </div>
+    </div>
+{% endif %}
+{% endblock %}
+
+<style>
+.custom-checkbox {
+    height: 30px;
+    width: 30px;
+}
+
+.profile-picture img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+}
+
+.student-details {
+    flex-grow: 1;
+}
+
+.card-body {
+    background: #f9f9f9;
+    border-radius: 8px;
+    padding: 20px;
+    transition: transform 0.2s ease-in-out;
+    display: flex;
+    flex-direction: column;
+}
+
+.card-body:hover {
+    transform: scale(1.02);
+}
+
+.card-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.card-text {
+    margin-bottom: 10px;
+}
+
+.list-inline-item {
+    margin-right: 10px;
+}
+
+.badge-primary {
+    background-color: #1F2937;
+    color: #F0BC74;
+}
+</style>
