@@ -3,41 +3,47 @@
 {% block title %}Shared Students - {{ institute.institute_name }}{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-    <h2 class="mb-4">Shared Students - {{ institute.institute_name }}</h2>
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Student Name</th>
-                <th>Email</th>
-                <th>Degree</th>
-                <th>Branch/Specialization</th>
-                <th>Year of Passout</th>
-                <th>Action</th>
-                <!-- Add more fields as needed -->
-            </tr>
-        </thead>
-        <tbody>
-            {% for student in shared_students %}
-            <tr>
-                <td>{{ forloop.counter }}</td>
-                <td>{{ student.user.get_full_name }}</td>
-                <td>{{ student.user.email }}</td>
-                <td>{{ student.degree }}</td>
-                <td>{{ student.branch_specialization }}</td>
-                <td>{{ student.year_of_passout }}</td>
-                <td>
+<div class="container-fluid mt-0">
+    <div class="card col-md-12">
+        <div class="card-header">
+            <h3 class="mb-4">Shared Students - {{ institute.institute_name }}</h3>
+        </div>
+        <div class="card-body">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Student Name</th>
+                        <th>Email</th>
+                        <th>Degree</th>
+                        <th>Branch/Specialization</th>
+                        <th>Year of Passout</th>
+                        <th>Action</th>
+                        <!-- Add more fields as needed -->
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for student in shared_students %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ student.user.get_full_name }}</td>
+                        <td>{{ student.user.email }}</td>
+                        <td>{{ student.degree }}</td>
+                        <td>{{ student.branch_specialization }}</td>
+                        <td>{{ student.year_of_passout }}</td>
+                        <td>
                             <a href="{% url 'recruiter_student_profile' student.user.username %}" class="btn btn-primary">View</a>
                         </td>
-                <!-- Add more fields as needed -->
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="6">No shared students found.</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+                        <!-- Add more fields as needed -->
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7">No shared students found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 {% endblock %}

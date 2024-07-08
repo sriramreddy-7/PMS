@@ -1009,3 +1009,36 @@ def manage_recruiter_request(request, request_id):
         req.save()
         messages.success(request, 'Request updated successfully.')
         return redirect('recruiter_received_requests')
+    
+import re
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+
+@login_required
+def ats_search(request):
+    recruiter = request.user.recruiter_profile
+    context = {
+        'recruiter': recruiter,
+        'recruiter_profile': recruiter,
+    }
+
+    if request.method == 'POST':
+        try:
+            keywords_str = request.POST.get('keywords', '').strip()
+            keywords = [keyword.strip() for keyword in keywords_str.split(',') if keyword.strip()]
+
+            matching_students = StudentProfile.objects.filter(
+                skills__skill__in=keywords
+            ).distinct()
+
+            context['matching_students'] = matching_students
+            context['keywords'] = keywords_str
+
+            for keyword in keywords:
+                print(keyword, end=", ")
+
+        except Exception as e:
+            # Handle exceptions if needed
+            print(f"Error processing keywords: {str(e)}")
+
+    return render(request, 'recruiter/ats_search.html', context)

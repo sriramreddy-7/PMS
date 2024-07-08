@@ -80,7 +80,7 @@ urlpatterns = [
     path('recruiter_received-requests/', views.recruiter_received_requests, name='recruiter_received_requests'),
     path('institute_manage_request/<int:request_id>/', views.manage_institute_request, name='manage_institute_request'),
     path('recruiter_manage_request/<int:request_id>/', views.manage_recruiter_request, name='manage_recruiter_request'),
-    
+    path('ats_search/', views.ats_search, name='ats_search'),
     
     
     ##password reset
