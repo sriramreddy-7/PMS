@@ -70,7 +70,7 @@ urlpatterns = [
     path('institute_profile/<int:institute_id>/', views.institute_profile, name='institute_profile'),
     path('institute_job_applications_detail/<int:job_id>/', views.institute_job_applications_detail, name='institute_job_applications_detail'),
     path('send_welcome_email', views.send_welcome_email, name='send_welcome_email'),
-    
+    path('single_student_upload/', views.single_student_upload, name='single_student_upload'),
     
     path('institute_student_on_campus_jobs_status/', views.institute_student_on_campus_jobs_status, name='institute_student_on_campus_jobs_status'),
     path('job_applications_on_campus_list/<int:job_id>/', views.job_applications_on_campus_list, name='job_applications_on_campus_list'),

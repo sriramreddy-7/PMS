@@ -1,43 +1,53 @@
 {% extends 'base.html' %}
 {% load static %}
 
-     {% block content %}
-        <section class="hero">
-        <div class="container">
-            <h2>Welcome to PMS</h2>
-            <p>Your one-stop solution for managing campus placements.</p>
-            <a href="{% url 'signup' %}" class="btn btn-primary">Get Started</a>
-        </div>
-    </section>
-    <section class="features py-5">
-        <div class="container">
-            <h2>Features</h2>
-            <div class="row mt-4">
-                <div class="col-md-4">
-                    <div class="feature">
-                        <h3>For Students</h3>
-                        <p>Browse and apply for jobs, track your applications, and get notified about new opportunities.</p>
-                    </div>
+{% block content %}
+<section class="hero">
+    <div class="container">
+        <h2>Welcome to PMS</h2>
+        <p>Your one-stop solution for managing campus placements.</p>
+        <a href="{% url 'signup' %}" class="btn btn-primary">Get Started</a>
+    </div>
+</section>
+<section class="features py-5">
+    <div class="container">
+        <h2>Features</h2>
+        <div class="row mt-4">
+            <div class="col-md-3">
+                <div class="feature">
+                    <h3>For Students</h3>
+                    <p>Browse and apply for jobs, track your applications, and get notified about new opportunities.</p>
                 </div>
-                <div class="col-md-4">
-                    <div class="feature">
-                        <h3>For Companies</h3>
-                        <p>Post job openings, review applications, and manage the recruitment process with ease.</p>
-                    </div>
+            </div>
+            <div class="col-md-3">
+                <div class="feature">
+                    <h3>For Companies</h3>
+                    <p>Post job openings, review applications, and manage the recruitment process with ease.</p>
                 </div>
-                <div class="col-md-4">
-                    <div class="feature">
-                        <h3>For Placement Officers</h3>
-                        <p>Oversee the entire placement process, approve job postings, and generate detailed reports.</p>
-                    </div>
+            </div>
+           
+            <div class="col-md-3">
+                <div class="feature">
+                    <h3>For Institutes</h3>
+                    <p>Oversee the entire placement process, approve job postings, and generate detailed reports. </p>
                 </div>
             </div>
         </div>
-    </section>
-    <!-- <footer class="bg-dark text-white py-3">
-        <div class="container">
-            <p class="mb-0">&copy; PMS by ksr </p>
-        </div>
-    </footer> -->
+    </div>
+</section>
+<!-- <section class="data-collection py-5">
+    <div class="container">
+        <h2>Data Collection</h2>
+        <p>Institutes can easily collect and manage detailed data from students, ensuring a smooth and efficient placement process.</p>
+        <a href="" class="btn btn-secondary">Learn More</a>
+    </div>
+</section> -->
+<!-- <footer class="bg-dark text-white py-3">
+    <div class="container">
+        <p class="mb-0">&copy; PMS by ksr </p>
+    </div>
+</footer> -->
 </body>
 {% endblock %}
+
+

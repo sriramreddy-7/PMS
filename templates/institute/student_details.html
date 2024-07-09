@@ -4,18 +4,36 @@
 {% block brand %}Institute Dashboard{% endblock %}
 {% block user_name %}{{ institute_profile.institute_name }}{% endblock %}
 
-{% block extra_css %}
-<link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
-{% endblock %}
 
-{% block extra_js %}
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+
+
+
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
 <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
 <script>
     $(document).ready(function () {
-        $('#studentTable').DataTable();
+        // Initialize DataTable
+        var table = $('#studentTable').DataTable();
+
+        // Apply the search for each column
+        $('#studentTable thead tr').clone(true).appendTo( '#studentTable thead' );
+        $('#studentTable thead tr:eq(1) th').each( function (i) {
+            var title = $(this).text();
+            $(this).html( '<input type="text" placeholder="Search '+title+'" />' );
+
+            $( 'input', this ).on( 'keyup change', function () {
+                if ( table.column(i).search() !== this.value ) {
+                    table
+                        .column(i)
+                        .search( this.value )
+                        .draw();
+                }
+            });
+        });
     });
 </script>
-{% endblock %}
+
 
 {% block content %}
 <div class="container-fluid">
@@ -44,63 +62,49 @@
                         <tbody>
                             {% for student in students %}
                             <tr>
-                                <td><a
-                                        href="{% url 'student_profile' student.user.username %}"><u>{{ student.user.username }}</u></a>
+                                <td><a href="{% url 'student_profile' student.user.username %}"><u>{{ student.user.username }}</u></a></td>
+                                <td>
+                                    {% if student.user.get_full_name %}
+                                        {{ student.user.get_full_name }}
+                                    {% else %}
+                                        <span class="text-danger">Not updated</span>
+                                    {% endif %}
                                 </td>
                                 <td>
-    {% if student.user.get_full_name %}
-        {{ student.user.get_full_name }}
-    {% else %}
-        <span class="text-danger"></i> Not updated</span>
-    {% endif %}
-</td>
-<td>
-    {% if student.user.email %}
-        {{ student.user.email }}
-    {% else %}
-        <span class="text-danger"></i> Not updated</span>
-    {% endif %}
-</td>
-<td>
-    {% if student.contact_number %}
-        {{ student.contact_number }}
-    {% else %}
-        <span class="text-danger"></i> Not updated</span>
-    {% endif %}
-</td>
-<td>
-    {% if student.degree %}
-        {{ student.degree }}
-    {% else %}
-        <span class="text-danger"></i> Not updated</span>
-    {% endif %}
-</td>
-<td>
-    {% if student.branch_specialization %}
-        {{ student.branch_specialization }}
-    {% else %}
-        <span class="text-danger"></i> Not updated</span>
-    {% endif %}
-</td>
-<td>
-    {% if student.year_of_passout %}
-        {{ student.year_of_passout }}
-    {% else %}
-        <span class="text-danger"></i> Not updated</span>
-    {% endif %}
-</td>
-
-                                <!-- <td>
-                                    {% if student.resume %}
-                                    <a href="{{ student.resume.url }}" class="btn btn-primary" target="_blank">
-                                        <i class="fas fa-file-alt"></i>
-                                    </a>
+                                    {% if student.user.email %}
+                                        {{ student.user.email }}
                                     {% else %}
-                                    <button class="btn btn-danger" disabled>
-                                        <i class="fas fa-file-alt"></i>
-                                    </button>
+                                        <span class="text-danger">Not updated</span>
                                     {% endif %}
-                                </td>    -->
+                                </td>
+                                <td>
+                                    {% if student.contact_number %}
+                                        {{ student.contact_number }}
+                                    {% else %}
+                                        <span class="text-danger">Not updated</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if student.degree %}
+                                        {{ student.degree }}
+                                    {% else %}
+                                        <span class="text-danger">Not updated</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if student.branch_specialization %}
+                                        {{ student.branch_specialization }}
+                                    {% else %}
+                                        <span class="text-danger">Not updated</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if student.year_of_passout %}
+                                        {{ student.year_of_passout }}
+                                    {% else %}
+                                        <span class="text-danger">Not updated</span>
+                                    {% endif %}
+                                </td>
                                 <td>
                                     {% if student.resume %}
                                     <a href="{{ student.resume.url }}" class="btn btn-primary" target="_blank">
@@ -112,7 +116,6 @@
                                     </button>
                                     {% endif %}
                                 </td>
-
                             </tr>
                             {% endfor %}
                         </tbody>

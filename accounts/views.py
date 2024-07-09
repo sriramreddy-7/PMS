@@ -360,6 +360,51 @@ def bulk_student_upload(request):
 
     return render(request, 'institute/bulk_student_upload.html', {'institute_profile':institute_profile})
 
+
+@login_required
+def single_student_upload(request):
+    institute_profile = InstituteProfile.objects.get(user=request.user)
+    if request.method == 'POST':
+        email = request.POST['email'].strip()
+        first_name = request.POST['first_name'].strip()
+        last_name = request.POST['last_name'].strip()
+        username = request.POST['username'].strip()
+        password = request.POST['password'].strip()
+        contact_number = request.POST['contact_number'].strip()
+        degree = request.POST['degree'].strip()
+        branch_specialization = request.POST['branch_specialization'].strip()
+        year_of_passout = request.POST['year_of_passout'].strip()
+        cgpa = request.POST['cgpa'].strip()
+
+        institute_profile = InstituteProfile.objects.get(user=request.user)
+        
+        user, created = User.objects.get_or_create(
+            email=email,
+            defaults={'username': username, 'first_name': first_name, 'last_name': last_name}
+        )
+        if created:
+            user.set_password(password)
+            user.save()
+            StudentProfile.objects.create(
+                user=user,
+                institute=institute_profile,
+                contact_number=contact_number,
+                degree=degree,
+                branch_specialization=branch_specialization,
+                year_of_passout=year_of_passout,
+                cgpa=cgpa
+            )
+            messages.success(request, "Student uploaded successfully.")
+        else:
+            messages.error(request, "A user with this email already exists.")
+        
+        return redirect('student_details')
+    context = {
+        'institute_profile': institute_profile,
+    }
+    return render(request, 'institute/single_student_upload.html', context)
+
+
 @login_required
 def student_details(request):
     try:
