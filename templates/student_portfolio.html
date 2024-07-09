@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Portfolio</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .card {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        .card-text {
+            font-size: 1rem;
+            color: #333;
+        }
+        .list-group-item {
+            font-size: 1.1rem;
+            padding: 10px 20px;
+        }
+        .btn-primary {
+            background-color: #1F2937;
+            border: none;
+        }
+        .btn-primary:hover {
+            background-color: #F0BC74;
+        }
+    </style>
+</head>
+<body>
+    <div class="container py-5">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="card">
+                     {% if student.profile_picture %}
+                    <img src="{{ student.profile_picture.url }}" class="card-img-top" alt="{{ student.user.username }}">
+                    {% else %}
+                    <img src="https://via.placeholder.com/150" class="card-img-top" alt="Default Profile Picture">
+                    {% endif %}
+                    <div class="card-body text-center">
+                        <h3 class="card-title">{{ student.user.first_name }} {{ student.user.last_name }}</h3>
+                        <p class="card-text">{{ student.degree }} - {{ student.branch_specialization }}</p>
+                        <p class="card-text">Passout Year: {{ student.year_of_passout }}</p>
+                        <p class="card-text">CGPA: {{ student.cgpa }}</p>
+                        <p class="card-text">Contact: {{ student.contact_number }}</p>
+                        <p class="card-text">Email: {{ student.user.email }}</p>
+                        <!-- <a href="{% url 'student_portfolio' student.user.username %}" class="btn btn-primary" target="_blank">View Portfolio</a> -->
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <h2>Skills</h2>
+                <ul class="list-group mb-4">
+                    {% for skill in student_skills %}
+                        <li class="list-group-item">{{ skill }}</li>
+                    {% endfor %}
+                </ul>
+
+                <h2>Public Documents</h2>
+                <div class="row">
+                    {% for document in student_documents %}
+                        <div class="col-md-4">
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ document.title }}</h5>
+                                    <p class="card-text">{{ document.description }}</p>
+                                    <a href="{{ document.file.url }}" class="btn btn-primary" download>Download</a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

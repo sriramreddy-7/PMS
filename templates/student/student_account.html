@@ -18,8 +18,11 @@
                 <div class="card-body">
                     <h5 class="card-title">{{ student.user.first_name }} {{ student.user.last_name }}</h5>
                     <p class="card-text"><strong>Email:</strong> {{ student.user.email }}</p>
-                    <a href="{% url 'student_details_update' %}" class="btn btn-primary">
+                    <a href="{% url 'student_details_update' %}" class="btn btn-primary btn-sm">
                         <i class="fas fa-edit"></i> Edit Profile
+                    </a>
+                    <a href="{% url 'student_portfolio' student.user.username  %}" class="btn btn-primary btn-sm" target="_blank">
+                        <i class="fas fa-file"></i> Student Portfolio
                     </a>
                 </div>
             </div>
@@ -51,11 +54,11 @@
                     <th>Resume</th>
                     <td>
                         {% if student.resume %}
-                            <a href="{{ student.resume.url }}" class="btn btn-primary" target="_blank">
+                            <a href="{{ student.resume.url }}" class="btn btn-primary btn-sm" target="_blank">
                                 <i class="fas fa-file-alt"></i> View Resume
                             </a>
                         {% else %}
-                            <button class="btn btn-danger" disabled>
+                            <button class="btn btn-danger btn-sm" disabled>
                                 <i class="fas fa-file-alt"></i> No Resume Uploaded
                             </button>
                         {% endif %}
@@ -69,8 +72,56 @@
                         {% endfor %}
                     </td>
                 </tr>
+                <tr>
+                    <th>Portfolio Visibility</th>
+                    <td>
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" class="custom-control-input" id="visibilitySwitch" {% if student.visibility == 'public' %}checked{% endif %}>
+                            <label class="custom-control-label" for="visibilitySwitch">Make Public</label>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+    <th>Portfolio Link</th>
+    <td>
+        <div class="input-group">
+            <input type="text" id="portfolioLink" class="form-control form-control-sm" value="{% url 'student_portfolio' student.user.username %}" readonly>
+            &nbsp;
+            <div class="input-group-append">
+                <button class="btn btn-primary btn-sm" type="button" onclick="copyPortfolioLink()">
+                    <i class="far fa-copy"></i>
+                </button>
+            </div>
+        </div>
+    </td>
+</tr>
             </table>
         </div>
     </div>
 </div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    function copyPortfolioLink() {
+        var copyText = document.getElementById("portfolioLink");
+        copyText.select();
+        copyText.setSelectionRange(0, 99999); /* For mobile devices */
+        document.execCommand("copy");
+        alert("Copied the portfolio link: " + copyText.value);
+    }
+</script>
+<script>
+    $(document).ready(function() {
+        $('#visibilitySwitch').change(function() {
+            var visibility = this.checked ? 'public' : 'private';
+            $.post("{% url 'toggle_visibility' student.user.username %}", {'visibility': visibility, csrfmiddlewaretoken: '{{ csrf_token }}'})
+                .done(function(data) {
+                    
+                })
+                .fail(function(error) {
+                    
+                });
+        });
+    });
+</script>
 {% endblock %}

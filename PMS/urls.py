@@ -71,9 +71,15 @@ urlpatterns = [
     path('institute_job_applications_detail/<int:job_id>/', views.institute_job_applications_detail, name='institute_job_applications_detail'),
     path('send_welcome_email', views.send_welcome_email, name='send_welcome_email'),
     path('single_student_upload/', views.single_student_upload, name='single_student_upload'),
+    path('toggle_visibility/<str:username>/', views.toggle_visibility, name='toggle_visibility'),
+    
+    
     
     path('institute_student_on_campus_jobs_status/', views.institute_student_on_campus_jobs_status, name='institute_student_on_campus_jobs_status'),
     path('job_applications_on_campus_list/<int:job_id>/', views.job_applications_on_campus_list, name='job_applications_on_campus_list'),
+    
+    
+    
     
     ##### Requests:
     path('institute_received-requests/', views.institute_received_requests, name='institute_received_requests'),
@@ -82,7 +88,8 @@ urlpatterns = [
     path('recruiter_manage_request/<int:request_id>/', views.manage_recruiter_request, name='manage_recruiter_request'),
     path('ats_search/', views.ats_search, name='ats_search'),
     
-    
+    path('student_portfolio/<str:username>/', views.student_portfolio, name='student_portfolio'),
+    path('upload_document/', views.upload_document, name='upload_document'),
     ##password reset
     path('password_reset/', views.password_reset_request, name='password_reset'),
     path('password_reset/done/', views.password_reset_done, name='password_reset_done'),

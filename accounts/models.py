@@ -37,7 +37,14 @@ class StudentProfile(models.Model):
     year_of_passout = models.IntegerField(blank=True, null=True,default=None)
     profile_picture = models.ImageField(upload_to='profile_pics/', blank=True, null=True, default=None)
     cgpa = models.FloatField(blank=True, null=True, default=None)
-
+    VISIBILITY_CHOICES = [
+        ('private', 'Private'),
+        ('public', 'Public'),
+    ]
+    visibility = models.CharField(max_length=10, choices=VISIBILITY_CHOICES, default='private')
+    linkedin_url = models.URLField(blank=True, default=None,null=True)
+    github_url = models.URLField(blank=True, null=True, default=None)
+    
     def __str__(self):
         return f'{self.user.username} - Student'
     

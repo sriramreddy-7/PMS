@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login as auth_login, logout
 from django.contrib.auth.decorators import login_required
 from .models import RecruiterProfile, InstituteProfile, Profile, StudentProfile, JobOpening, JobApplication, Request
-from .models import Skill
+from .models import Skill,StudentDocument
 import pandas as pd
 from django.db.models import Q
 from django.utils.dateparse import parse_date
@@ -438,7 +438,6 @@ def student_profile(request, username):
 
 @login_required
 def student_account(request, username):
-    print("she")
     student = get_object_or_404(StudentProfile, user__username=username)
     student_skills = student.skills.values_list('skill', flat=True)
     context = {
@@ -1086,3 +1085,61 @@ def ats_search(request):
             print(f"Error processing skills: {str(e)}")
 
     return render(request, 'recruiter/ats_search_2.html', context)
+
+
+def student_portfolio(request, username):
+    try:
+        user = get_object_or_404(User, username=username)
+        student = get_object_or_404(StudentProfile, user=user)
+        student_skills = student.skills.values_list('skill', flat=True)
+        student_documents = StudentDocument.objects.filter(student=student, visibility='public')
+        context = {
+        'student': student,
+        'student_skills': student_skills,
+        'student_documents': student_documents,
+        }
+        return render(request, 'student_portfolio.html', context)
+    except (User.DoesNotExist, StudentProfile.DoesNotExist):
+        return HttpResponse('Student not found.')
+    
+    
+    
+@login_required
+def upload_document(request):
+    if request.method == 'POST' and request.FILES.get('document'):
+        title = request.POST['title']
+        description = request.POST['description']
+        file = request.FILES['document']
+        visibility = request.POST['visibility']
+        student_profile = StudentProfile.objects.get(user=request.user)
+
+        document = StudentDocument(
+            student=student_profile,
+            title=title,
+            description=description,
+            file=file,
+            visibility=visibility
+        )
+        document.save()
+        return redirect('upload_document')
+
+    student_profile = StudentProfile.objects.get(user=request.user)
+    documents = StudentDocument.objects.filter(student=student_profile)
+    
+    context = {
+        'student': student_profile,
+        'documents': documents,
+    }
+    return render(request, 'student/upload_document.html', context)
+
+
+@login_required
+def toggle_visibility(request, username):
+    student = get_object_or_404(StudentProfile, user__username=username)
+    print("toggle_visibility")
+    if request.method == 'POST':
+        visibility = request.POST.get('visibility')
+        if visibility in ['private', 'public']:
+            student.visibility = visibility
+            student.save()
+    return redirect('student_account',username)

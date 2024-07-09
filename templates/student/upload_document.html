@@ -1,0 +1,129 @@
+{% extends 'student/base_student.html' %}
+{% block content %}
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<style>
+    .card {
+        margin-bottom: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+    }
+
+    .card-title {
+        font-size: 1.2rem;
+        font-weight: bold;
+    }
+
+    .card-text {
+        font-size: 0.9rem;
+        color: #555;
+    }
+
+    .modal-header {
+        background-color: #1F2937;
+        color: white;
+    }
+
+    .btn-primary {
+        background-color: #1F2937;
+        border-color: #1F2937;
+    }
+
+    .btn-primary:hover {
+        background-color: #F0BC74;
+        border-color: #F0BC74;
+    }
+</style>
+
+<div class="container py-0">
+    <!-- <h2 class="mb-4">My Documents</h2> -->
+    <button type="button" class="btn btn-primary mb-4" data-toggle="modal" data-target="#uploadModal">
+        Upload Document
+    </button>
+
+    <!-- Modal -->
+    <div class="modal fade" id="uploadModal" tabindex="-1" role="dialog" aria-labelledby="uploadModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="uploadModalLabel">Upload Document</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="title">Title</label>
+                            <input type="text" class="form-control" id="title" name="title" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="description">Description</label>
+                            <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="document">Document</label>
+                            <input type="file" class="form-control-file" id="document" name="document" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="visibility">Visibility</label>
+                            <select class="form-control" id="visibility" name="visibility">
+                                <option value="private">Private</option>
+                                <option value="public">Public</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Upload</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- <h2 class="mt-5">Uploaded Documents</h2> -->
+    <div class="row">
+        {% for document in documents %}
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+
+                    {% if document.title %}
+                    <h5 class="card-title">{{ document.title }}</h5>
+                    {% else %}
+                    <h5 class="card-title">&nbsp;</h5> <!-- Non-breaking space -->
+                    {% endif %}
+
+                    {% if document.description %}
+                    <p class="card-text">{{ document.description }}</p>
+                    {% else %}
+                    <p class="card-text">&nbsp;</p> <!-- Non-breaking space -->
+                    {% endif %}
+
+                    {% if document.visibility %}
+                    <p class="card-text"><strong>Visibility:</strong> {{ document.visibility }}</p>
+                    {% else %}
+                    <p class="card-text">&nbsp;</p> <!-- Non-breaking space -->
+                    {% endif %}
+
+                    <a href="{{ document.file.url }}" class="btn btn-primary btn-sm" target="_blank">
+                        <i class="fas fa-eye"></i> View
+                    </a>
+                    <a href="{{ document.file.url }}" class="btn btn-primary btn-sm" download>
+                        <i class="fas fa-download"></i> Download
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+{% endblock %}
