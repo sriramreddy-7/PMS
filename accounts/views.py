@@ -924,7 +924,9 @@ def send_request_to_recruiter(request, recruiter_id):
     else:
         messages.error(request, 'Invalid request method.')
         return redirect('institute_recruiters')
-
+    
+    
+    
 @login_required
 def institute_requests(request):
     if request.user.profile.role != 'institute':
