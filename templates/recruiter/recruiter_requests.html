@@ -4,20 +4,45 @@
 
 {% block brand %}Manage Requests{% endblock %}
 
+
+
 {% block content %}
-<div class="content">
+<br>
+<div class="container-fluid">
     <div class="row">
         <div class="col-md-12">
-            <h1>Pending Requests</h1>
-            <ul>
-            {% for request in requests %}
-                <li>{{ request }}</li>
-                <!-- Add accept and decline buttons as needed -->
-            {% empty %}
-                <li>No pending requests.</li>
-            {% endfor %}
-            </ul>
+            <div class="card">
+                <div class="card-body">
+                 
+                    <table id="requestsTable" class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Recruiter</th>
+                                <th>Status</th>
+                                
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for request in requests %}
+                                <tr>
+                                    <td>{{ request.receiver.institute_profile.institute_name }}</td>
+                                    <td>{{ request.get_status_display }}</td>
+                                   
+                                </tr>
+                                
+                            {% empty %}
+                                <tr>
+                                    <td colspan="3">No requests found.</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+
+
+
 {% endblock %}

@@ -1274,7 +1274,7 @@ def recruiter_institutes(request):
 
 
 def recruiter_requests(request):
-    requests = Request.objects.filter(sender=request.user, status='pending')
+    requests = Request.objects.filter(sender=request.user)
     recruiter = request.user.recruiter_profile
     context = {
         'requests': requests,
