@@ -840,20 +840,20 @@ def view_institute_profile(request):
 
 @login_required
 def recruiter_dashboard(request):
-    # job_openings = JobOpening.objects.filter(institute=request.user.recruiter_profile)
-    # job_openings = JobOpening.objects.filter(institute=request.user.recruiter_profile)
-
-    # requests = Request.objects.filter(receiver=request.user)
-    # shared_students = StudentProfile.objects.filter(institute__in=request.user.recruiter_profile.institutes_shared_with.all())
-    # recruiter_profile=request.user.recruiter_profile
-    # context = {
-    #     'job_openings': job_openings,
-    #     'requests': requests,
-    #     'shared_students': shared_students,
-    #     'recruiter_profile':recruiter_profile,
-    # }
-    return render(request, 'recruiter/dashboard.html')
-
+    # Fetching recruiter profile and pending requests
+    recruiter_profile = request.user.recruiter_profile
+    pending_requests = Request.objects.filter(receiver=request.user, status='pending')
+    
+    # Assuming you have a many-to-many relationship for institutes shared with recruiters
+    # collaborated_institutes = recruiter_profile.institutes_shared_with.all()
+    
+    context = {
+        'recruiter_profile': recruiter_profile,
+        'requests': pending_requests,
+        # 'collaborated_institutes': collaborated_institutes,
+    }
+    
+    return render(request, 'recruiter/dashboard.html', context)
 
 @login_required
 def send_request(request, institute_id):

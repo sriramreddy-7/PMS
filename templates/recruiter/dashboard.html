@@ -6,6 +6,71 @@
 
 {% block content %}
 <div class="content">
-    
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Recruiter Information</h3>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Organization Name:</strong> {{ recruiter_profile.organization_name }}</p>
+                        <p><strong>Designation:</strong> {{ recruiter_profile.designation }}</p>
+                        <p><strong>Location:</strong> {{ recruiter_profile.location }}</p>
+                        <p><strong>Contact Number:</strong> {{ recruiter_profile.contact_number }}</p>
+                        {% if recruiter_profile.website %}
+                        <p><strong>Website:</strong> <a href="{{ recruiter_profile.website }}" target="_blank">{{ recruiter_profile.website }}</a></p>
+                        {% endif %}
+                        {% if recruiter_profile.logo %}
+                        <p><strong>Logo:</strong><br>
+                            <img src="{{ recruiter_profile.logo.url }}" alt="{{ recruiter_profile.organization_name }}" style="max-width: 150px; max-height: 150px;">
+                        </p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Collaborated Institutes</h3>
+                    </div>
+                    <div class="card-body">
+                        <ul>
+                            {% for institute in collaborated_institutes %}
+                            <li>{{ institute.institute_name }}</li>
+                            {% empty %}
+                            <li>No collaborated institutes</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <h3 class="card-title">Pending Requests</h3>
+                    </div>
+                    <div class="card-body">
+                        {% for request in requests %}
+                        <div class="alert alert-info">
+                            <p><strong>Type:</strong> {{ request.get_request_type_display }}</p>
+                            <p><strong>Status:</strong> {{ request.status }}</p>
+                            <p><strong>Sender:</strong> {{ request.sender.username }}</p>
+                            {% if request.request_type == 'recruiter_to_institute' %}
+                            <p><strong>Receiver Institute:</strong> {{ request.receiver.institute_profile.institute_name }}</p>
+                            {% elif request.request_type == 'institute_to_recruiter' %}
+                            <p><strong>Receiver Recruiter:</strong> {{ request.receiver.recruiter_profile.organization_name }}</p>
+                            {% endif %}
+                            {% if request.status == 'pending' %}
+                            <a href="{% url 'accept_request' request.id %}" class="btn btn-success">Accept</a>
+                            <a href="{% url 'decline_request' request.id %}" class="btn btn-danger">Decline</a>
+                            {% endif %}
+                        </div>
+                        {% empty %}
+                        <p>No pending requests</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}
