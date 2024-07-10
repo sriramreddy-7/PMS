@@ -1,0 +1,23 @@
+{% extends 'recruiter/base_recruiter.html' %}
+
+{% block title %}Manage Requests{% endblock %}
+
+{% block brand %}Manage Requests{% endblock %}
+
+{% block content %}
+<div class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Pending Requests</h1>
+            <ul>
+            {% for request in requests %}
+                <li>{{ request }}</li>
+                <!-- Add accept and decline buttons as needed -->
+            {% empty %}
+                <li>No pending requests.</li>
+            {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

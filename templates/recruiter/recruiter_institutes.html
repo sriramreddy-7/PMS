@@ -1,0 +1,47 @@
+{% extends 'recruiter/base_recruiter.html' %}
+{% block title %}Recruiter Dashboard{% endblock %}
+{% block brand %}Recruiter Dashboard{% endblock %}
+{% block content %}
+<div class="content">
+    <div class="container-fluid">
+        <div class="row">
+            {% for institute in institutes %}
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-md-2">
+                                {% if institute.logo %}
+                                <img src="{{ institute.logo.url }}" class="img-fluid rounded-circle" style="max-width: 100%;" alt="{{ institute.institute_name }} Logo">
+                                {% else %}
+                                <img src="https://via.placeholder.com/150" class="img-fluid rounded-circle" style="max-width: 100%;" alt="No Institute Logo">
+                                {% endif %}
+                                
+                            </div>
+                            <div class="col-md-8">
+                                <div class="text-center">
+                                    <h5 class="card-title"><a href="{% url 'institute_profile'  institute.id  %}" target="_blank"><u>{{ institute.institute_name }}</u></a></h5>
+                                </div>
+                                <p class="card-text">{{ institute.location }}</p>
+                                <p class="card-text">{{ institute.contact_number }}</p>
+                                <p class="card-text">State: {{ institute.state }}</p>
+                                <p class="card-text">Country: {{ institute.country }}</p>
+                                <p class="card-text">Number of Students: {{ institute.num_students }}</p>
+                            </div>
+                            <div class="col-md-2">
+                                <form action="{% url 'send_request' institute.id %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-paper-plane"></i> Send Request
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

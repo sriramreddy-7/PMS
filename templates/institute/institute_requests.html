@@ -11,21 +11,13 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-body">
-                    <!-- <div class="mb-0">
-                        <label for="statusFilter" class="form-label">Filter by Status:</label>
-                        <select id="statusFilter" class="form-select" onchange="filterRequests(this.value)">
-                            <option value="">All Statuses</option>
-                            <option value="pending">Pending</option>
-                            <option value="accepted">Accepted</option>
-                            <option value="declined">Declined</option>
-                        </select>
-                    </div> -->
+                 
                     <table id="requestsTable" class="table table-striped">
                         <thead>
                             <tr>
                                 <th>Recruiter</th>
                                 <th>Status</th>
-                                <th>Action</th>
+                                
                             </tr>
                         </thead>
                         <tbody>
@@ -33,58 +25,8 @@
                                 <tr>
                                     <td>{{ request.sender.recruiter_profile.organization_name }}</td>
                                     <td>{{ request.get_status_display }}</td>
-                                    <td>
-                                        {% if request.status == 'pending' %}
-                                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#updateModal{{ request.id }}">
-                                                Update
-                                            </button>
-                                        {% elif request.status == 'accepted' %}
-                                            <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#updateModal{{ request.id }}">
-                                                Edit
-                                            </button>
-                                        {% else %}
-                                            <!-- Handle other statuses or provide additional actions as needed -->
-                                            {{ request.get_status_display }}
-                                        {% endif %}
-                                    </td>
+                                   
                                 </tr>
-                                
-                                <!-- Modal for updating request -->
-                                <div class="modal fade" id="updateModal{{ request.id }}" tabindex="-1" aria-labelledby="updateModalLabel{{ request.id }}" aria-hidden="true">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <form action="{% url 'manage_request' request.id %}" method="post">
-                                                {% csrf_token %}
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="updateModalLabel{{ request.id }}">Update Request</h5>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                
-                                                <div class="modal-body">
-                                                    <input type="hidden" name="request_id" value="{{ request.id }}">
-                                                    <div class="form-group">
-                                                        <label for="action">Action:</label>
-                                                        <select id="action" name="action" class="form-control">
-                                                            {% if request.status == 'pending' %}
-                                                                <option value="accept">Accept</option>
-                                                                <option value="decline">Decline</option>
-                                                            {% elif request.status == 'accepted' %}
-                                                                <option value="decline">Decline</option>
-                                                                <!-- Add other options or actions as needed -->
-                                                            {% endif %}
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                    <button type="submit" class="btn btn-primary">Update</button>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
                                 
                             {% empty %}
                                 <tr>
@@ -99,26 +41,6 @@
     </div>
 </div>
 
-<script>
-    function filterRequests(status) {
-        if (status === '') {
-            // Show all rows
-            $('#requestsTable tbody tr').show();
-        } else {
-            // Hide all rows and show only matching ones
-            $('#requestsTable tbody tr').hide();
-            $('#requestsTable tbody tr td:nth-child(2)').each(function() {
-                if ($(this).text() === status) {
-                    $(this).parent().show();
-                }
-            });
-        }
-    }
-    
-    // Initial filter based on default selection
-    $(document).ready(function() {
-        filterRequests($('#statusFilter').val());
-    });
-</script>
+
 
 {% endblock %}

@@ -45,9 +45,9 @@ urlpatterns = [
     path('delete_job/<int:job_id>/', views.delete_job, name='delete_job'),
     
     # other paths...
-    path('all_recruiters/', views.all_recruiters, name='all_recruiters'),
+    # path('all_recruiters/', views.all_recruiters, name='all_recruiters'),
     
-    
+    # path("find_institutes",views.find_institutes,name="find_institutes"),
     path('post_job/', views.post_job_opening, name='post_job'),
     path('job_data/', views.institute_job_data, name='institute_job_data'),
     path('edit_institute_profile/', views.edit_institute_profile, name='edit_institute_profile'),
@@ -77,7 +77,7 @@ urlpatterns = [
     path('institute_student_on_campus_jobs_status/', views.institute_student_on_campus_jobs_status, name='institute_student_on_campus_jobs_status'),
     path('job_applications_on_campus_list/<int:job_id>/', views.job_applications_on_campus_list, name='job_applications_on_campus_list'),
     
-    
+    path('send_request_to_recruiter/<int:recruiter_id>/', views.send_request_to_recruiter, name='send_request_to_recruiter'),
     
     
     ##### Requests:
@@ -95,6 +95,15 @@ urlpatterns = [
     path('reset/<uidb64>/<token>/', views.password_reset_confirm, name='password_reset_confirm'),
     path('reset/done/', views.password_reset_complete, name='password_reset_complete'),
     path('forgot_password/', views.forgot_password, name='forgot_password'),
+    
+    
+    
+    
+    #### REQUESTS
+    path('institute_recruiters/', views.institute_recruiters, name='institute_recruiters'),
+    path('institute_requests/', views.institute_requests, name='institute_requests'),
+    path('recruiter_institutes/', views.recruiter_institutes, name='recruiter_institutes'),
+    path('recruiter_requests/', views.recruiter_requests, name='recruiter_requests'),
 
     
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

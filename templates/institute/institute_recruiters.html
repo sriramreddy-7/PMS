@@ -10,9 +10,15 @@
                     <div class="card-body">
                         <div class="row align-items-center">
                             <div class="col-md-2">
-                                <!-- Display recruiter's profile picture or default image -->
-                                <img src="{{ recruiter.logo.url }}" class="img-fluid rounded-circle" style="max-width: 100%;" alt="Recruiter Profile Picture">
-                            </div>
+    {% if recruiter.logo %}
+        <!-- Display recruiter's profile picture -->
+        <img src="{{ recruiter.logo.url }}" class="img-fluid rounded-circle" style="max-width: 100%;" alt="Recruiter Profile Picture">
+    {% else %}
+        <!-- Display placeholder image -->
+        <img src="https://via.placeholder.com/150" class="img-fluid rounded-circle" style="max-width: 100%;" alt="Placeholder Image">
+    {% endif %}
+</div>
+
                             <div class="col-md-8">
                                 <div class="text-center">
                                     <h5 class="card-title">{{ recruiter.organization_name }}</h5>
@@ -24,7 +30,7 @@
                             </div>
                             <div class="col-md-2">
                                 <!-- Add any actions/buttons specific to recruiters if needed -->
-                                <form action="{% url 'send_request' recruiter.user.id %}" method="post">
+                                <form action="{% url 'send_request_to_recruiter' recruiter.user.id %}" method="post">
                                     {% csrf_token %}
                                     <button type="submit" class="btn btn-primary">
                                         <i class="fas fa-paper-plane"></i> Send Request

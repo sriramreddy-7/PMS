@@ -49,6 +49,48 @@ class StudentProfile(models.Model):
         return f'{self.user.username} - Student'
     
 
+class Skill(models.Model):
+    SKILL_CHOICES = [
+        ('Python', 'Python'),
+        ('Java', 'Java'),
+        ('JavaScript', 'JavaScript'),
+        ('C++', 'C++'),
+        ('Ruby', 'Ruby'),
+        ('PHP', 'PHP'),
+        ('HTML/CSS', 'HTML/CSS'),
+        ('SQL', 'SQL'),
+        ('Data Analysis', 'Data Analysis'),
+        ('Machine Learning', 'Machine Learning'),
+        ('UI/UX Design', 'UI/UX Design'),
+        ('Project Management', 'Project Management'),
+        ('Leadership', 'Leadership'),
+        ('Communication', 'Communication'),
+        ('Problem Solving', 'Problem Solving'),
+        ('Teamwork', 'Teamwork'),
+    ]
+    student = models.ForeignKey(StudentProfile, on_delete=models.CASCADE, related_name='skills')
+    skill = models.CharField(max_length=100, choices=SKILL_CHOICES)
+
+    def __str__(self):
+        return self.skill   
+
+    
+class StudentDocument(models.Model):
+    VISIBILITY_CHOICES = [
+        ('private', 'Private'),
+        ('public', 'Public'),
+    ]
+    student = models.ForeignKey(StudentProfile, on_delete=models.CASCADE, related_name='documents')
+    title = models.CharField(max_length=255)
+    description = models.TextField(blank=True, null=True)
+    file = models.FileField(upload_to='student_documents/')
+    visibility = models.CharField(max_length=10, choices=VISIBILITY_CHOICES, default='private')
+    upload_date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title
+    
+
 def upload_location(instance, filename):
     return f"recruiter_profiles/{instance.user.username}/{filename}"
 
@@ -60,9 +102,46 @@ class RecruiterProfile(models.Model):
     contact_number = models.CharField(max_length=15, blank=True, null=True, default=None)
     designation = models.CharField(max_length=255, default='Default Designation')
     logo = models.ImageField(upload_to=upload_location, blank=True, null=True,default=None)
+    # institutes_shared_with = models.ManyToManyField('InstituteProfile', related_name='shared_with_recruiters', blank=True)
+
 
     def __str__(self):
         return self.organization_name
+class Request(models.Model):
+    REQUEST_TYPES = [
+        ('recruiter_to_institute', 'Recruiter to Institute'),
+        ('institute_to_recruiter', 'Institute to Recruiter'),
+    ]
+    
+    request_type = models.CharField(max_length=50, choices=REQUEST_TYPES)
+    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_requests')
+    receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name='received_requests')
+    status_choices = [
+        ('pending', 'Pending'),
+        ('accepted', 'Accepted'),
+        ('declined', 'Declined'),
+    ]
+    status = models.CharField(max_length=10, choices=status_choices, default='pending')
+
+    def __str__(self):
+        return f'{self.get_request_type_display()} - {self.sender.username} -> {self.receiver.username}'
+
+    def accept(self):
+        if self.status == 'pending':
+            self.status = 'accepted'
+            self.save()
+
+            # Handle specific logic based on request type
+            if self.request_type == 'recruiter_to_institute':
+                self.sender.recruiter_profile.institutes_shared_with.add(self.receiver.institute_profile)
+            elif self.request_type == 'institute_to_recruiter':
+                self.receiver.recruiter_profile.institutes_shared_with.add(self.sender.institute_profile)
+
+    def decline(self):
+        if self.status == 'pending':
+            self.status = 'declined'
+            self.save()
+
 
 class JobOpening(models.Model):
     institute = models.ForeignKey(InstituteProfile, on_delete=models.CASCADE, related_name='job_openings')
@@ -100,65 +179,5 @@ class JobApplication(models.Model):
     def __str__(self):
         return f'{self.student.user.username} - {self.job_opening.title}'
     
-    
-    
-class Request(models.Model):
-    REQUEST_TYPES = [
-        ('recruiter_to_institute', 'Recruiter to Institute'),
-        ('institute_to_recruiter', 'Institute to Recruiter'),
-    ]
-    
-    request_type = models.CharField(max_length=50, choices=REQUEST_TYPES)
-    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_requests')
-    receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name='received_requests')
-    status_choices = [
-        ('pending', 'Pending'),
-        ('accepted', 'Accepted'),
-        ('declined', 'Declined'),
-    ]
-    status = models.CharField(max_length=10, choices=status_choices, default='pending')
 
-    def __str__(self):
-        return f'{self.get_request_type_display()} - {self.sender.username} -> {self.receiver.username}'
     
-    
-    
-class Skill(models.Model):
-    SKILL_CHOICES = [
-        ('Python', 'Python'),
-        ('Java', 'Java'),
-        ('JavaScript', 'JavaScript'),
-        ('C++', 'C++'),
-        ('Ruby', 'Ruby'),
-        ('PHP', 'PHP'),
-        ('HTML/CSS', 'HTML/CSS'),
-        ('SQL', 'SQL'),
-        ('Data Analysis', 'Data Analysis'),
-        ('Machine Learning', 'Machine Learning'),
-        ('UI/UX Design', 'UI/UX Design'),
-        ('Project Management', 'Project Management'),
-        ('Leadership', 'Leadership'),
-        ('Communication', 'Communication'),
-        ('Problem Solving', 'Problem Solving'),
-        ('Teamwork', 'Teamwork'),
-    ]
-    student = models.ForeignKey(StudentProfile, on_delete=models.CASCADE, related_name='skills')
-    skill = models.CharField(max_length=100, choices=SKILL_CHOICES)
-
-    def __str__(self):
-        return self.skill   
-    
-class StudentDocument(models.Model):
-    VISIBILITY_CHOICES = [
-        ('private', 'Private'),
-        ('public', 'Public'),
-    ]
-    student = models.ForeignKey(StudentProfile, on_delete=models.CASCADE, related_name='documents')
-    title = models.CharField(max_length=255)
-    description = models.TextField(blank=True, null=True)
-    file = models.FileField(upload_to='student_documents/')
-    visibility = models.CharField(max_length=10, choices=VISIBILITY_CHOICES, default='private')
-    upload_date = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return self.title

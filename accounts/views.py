@@ -146,6 +146,26 @@ def signup(request):
     # If GET request or form is invalid, render the signup form
     return render(request, 'signup.html')
 
+def send_mail_admin(request, username, dashboard, role):
+    subject = 'Welcome to PlaceCom'
+    message = f"Hi {username},\n\nThank you for logging in as a {role}."
+    from_email = config('EMAIL_HOST_USER')
+    recipient_list = [username]
+    
+    send_mail(subject, message, from_email, recipient_list)
+    
+    # Sending email to admin with login details
+    admin_email = config('ADMIN_EMAIL')
+    admin_subject = f"{role.capitalize()} Login Alert"
+    admin_message = f"The user with email {username} logged into the {dashboard} dashboard as a {role}."
+    
+    send_mail(admin_subject, admin_message, from_email, [admin_email])
+    print("sent mail")
+    return
+    
+
+
+
 def login(request):
     if request.method == 'POST':
         username_or_email = request.POST.get('username')
@@ -170,13 +190,19 @@ def login(request):
         if user is not None:
             auth_login(request, user)
             messages.success(request, 'Login successful!')
-            if user.profile.role == 'student':
+            role = user.profile.role
+            email = user.email
+            if role == 'student':
+                send_mail_admin(request, email, 'student_dashboard', role)
                 return redirect('student_dashboard')
-            elif user.profile.role == 'recruiter':
+            elif role == 'recruiter':
+                send_mail_admin(request, email, 'recruiter_dashboard', role)
                 return redirect('recruiter_dashboard')
-            elif user.profile.role == 'institute':
+            elif role == 'institute':
+                send_mail_admin(request, email, 'institute_dashboard', role)
                 return redirect('institute_dashboard')
             else:
+                send_mail_admin(request, email, 'Invalid role', role)
                 messages.error(request, 'Invalid role.')
                 return render(request, 'login.html')
         else:
@@ -304,20 +330,20 @@ def bulk_student_upload(request):
                 last_name = row['Last_Name']
                 username = row['Username']
                 
-                if email=="dikayan601@calunia.com":
-                    subject = 'Welcome to PlaceCom'
-                    from_email = config('EMAIL_HOST_USER')
-                    recipient_list = [email]
+            
+                subject = 'Welcome to PlaceCom'
+                from_email = config('EMAIL_HOST_USER')
+                recipient_list = [email]
 
-                    # Render the email body using a template
-                    message = render_to_string('welcome_email.html', {
-                        'first_name': first_name,
-                        'username': email,
-                        'password': password,
-                    })
+                # Render the email body using a template
+                message = render_to_string('welcome_email.html', {
+                    'first_name': first_name,
+                    'username': email,
+                    'password': password,
+                })
 
        
-                    send_mail(subject, message, from_email, recipient_list, html_message=message)
+                send_mail(subject, message, from_email, recipient_list, html_message=message)
                 
                 if email == "":
                     break
@@ -492,14 +518,25 @@ def student_details_update(request):
     return render(request, 'student/student_details_update.html', context)
 
 
-def all_recruiters(request):
+# def all_recruiters(request):
+#     recruiters = RecruiterProfile.objects.all()
+#     institute_profile = get_object_or_404(InstituteProfile, user=request.user)
+#     context = {
+#         'recruiters': recruiters,
+#         'institute_profile': institute_profile,
+#     }
+#     return render(request, 'institute/all_recruiters.html', context)
+
+
+def institute_recruiters(request):
     recruiters = RecruiterProfile.objects.all()
     institute_profile = get_object_or_404(InstituteProfile, user=request.user)
     context = {
         'recruiters': recruiters,
-        'institute_profile': institute_profile,
+        'institute_profile':institute_profile,
     }
-    return render(request, 'institute/all_recruiters.html', context)
+    return render(request, 'institute/institute_recruiters.html', context)
+
 
 
 def institute_student_on_campus_jobs_status(request):
@@ -777,20 +814,37 @@ def view_institute_profile(request):
 
 
 
+# @login_required
+# def recruiter_dashboard(request):
+#     # Retrieve all available institute
+#     if request.user.profile.role != 'recruiter':
+#         messages.error(request, 'You do not have permission to access this page.')
+#         return redirect('login')
+#     # institutes = InstituteProfile.objects.all()
+#     institutes = InstituteProfile.objects.annotate(num_students=Count('students'))
+#     recruiter_profile=request.user.recruiter_profile
+#     context = {
+#         'institutes': institutes,
+#         'recruiter_profile':recruiter_profile,
+#     }
+#     return render(request, 'recruiter/dashboard.html', context)
+
 @login_required
 def recruiter_dashboard(request):
-    # Retrieve all available institute
-    if request.user.profile.role != 'recruiter':
-        messages.error(request, 'You do not have permission to access this page.')
-        return redirect('login')
-    # institutes = InstituteProfile.objects.all()
-    institutes = InstituteProfile.objects.annotate(num_students=Count('students'))
-    recruiter_profile=request.user.recruiter_profile
-    context = {
-        'institutes': institutes,
-        'recruiter_profile':recruiter_profile,
-    }
-    return render(request, 'recruiter/dashboard.html', context)
+    # job_openings = JobOpening.objects.filter(institute=request.user.recruiter_profile)
+    # job_openings = JobOpening.objects.filter(institute=request.user.recruiter_profile)
+
+    # requests = Request.objects.filter(receiver=request.user)
+    # shared_students = StudentProfile.objects.filter(institute__in=request.user.recruiter_profile.institutes_shared_with.all())
+    # recruiter_profile=request.user.recruiter_profile
+    # context = {
+    #     'job_openings': job_openings,
+    #     'requests': requests,
+    #     'shared_students': shared_students,
+    #     'recruiter_profile':recruiter_profile,
+    # }
+    return render(request, 'recruiter/dashboard.html')
+
 
 @login_required
 def send_request(request, institute_id):
@@ -820,6 +874,61 @@ def send_request(request, institute_id):
             messages.success(request, 'Request sent successfully.')
         
         return redirect('recruiter_dashboard')
+    
+@login_required
+@login_required
+def send_request_to_recruiter(request, recruiter_id):
+    if request.method == 'POST':
+        try:
+            print("Recruiter ID:", recruiter_id)
+            recruiter = get_object_or_404(RecruiterProfile, pk=recruiter_id)
+            institute = request.user.institute_profile
+            
+            # Debugging logs
+            print("User:", request.user)
+            print("Recruiter User:", recruiter.user)
+            print("Institute User:", institute.user)
+            
+            request_type = 'institute_to_recruiter'
+            
+            # Check if a similar request already exists and is pending or accepted
+            existing_request = Request.objects.filter(
+                Q(sender=request.user, receiver=recruiter.user) |
+                Q(sender=institute.user, receiver=recruiter.user),
+                request_type=request_type,
+                status__in=['pending', 'accepted']  # Check for pending or accepted status
+            ).exists()
+            
+            if existing_request:
+                messages.warning(request, 'Request already sent or accepted. Please wait for a response.')
+            else:
+                # Create a new request
+                request_obj = Request.objects.create(
+                    request_type=request_type,
+                    sender=request.user,
+                    receiver=recruiter.user,
+                    status='pending'
+                )
+                messages.success(request, 'Request sent successfully.')
+            
+            return redirect('institute_dashboard')
+        except RecruiterProfile.DoesNotExist:
+            messages.error(request, 'Recruiter profile does not exist.')
+            return redirect('institute_dashboard')
+        except InstituteProfile.DoesNotExist:
+            messages.error(request, 'Institute profile does not exist.')
+            return redirect('institute_dashboard')
+        except Exception as e:
+            messages.error(request, f'An error occurred: {str(e)}')
+            return redirect('institute_dashboard')
+    else:
+        messages.error(request, 'Invalid request method.')
+        return redirect('institute_dashboard')
+
+    
+    
+    
+
 
 @login_required
 def institute_requests(request):
@@ -1081,7 +1190,6 @@ def ats_search(request):
             context['selected_skills'] = selected_skills
 
         except Exception as e:
-            # Handle exceptions if needed
             print(f"Error processing skills: {str(e)}")
 
     return render(request, 'recruiter/ats_search_2.html', context)
@@ -1143,3 +1251,36 @@ def toggle_visibility(request, username):
             student.visibility = visibility
             student.save()
     return redirect('student_account',username)
+
+
+
+def institute_requests(request):
+    institute = request.user.institute_profile
+    requests = Request.objects.filter(receiver=request.user)
+    institute_profile=institute
+    context = {
+        'institute': institute,
+        'requests': requests,
+        'institute_profile':institute_profile,
+    }
+    return render(request, 'institute/institute_requests.html', context)
+
+
+def recruiter_institutes(request):
+    institutes = InstituteProfile.objects.annotate(num_students=Count('students'))
+    recruiter_profile=request.user.recruiter_profile
+    context = {
+        'institutes': institutes,
+        'recruiter_profile':recruiter_profile,
+    }
+    return render(request, 'recruiter/recruiter_institutes.html', context)
+
+
+def recruiter_requests(request):
+    requests = Request.objects.filter(sender=request.user, status='pending')
+    recruiter = request.user.recruiter_profile
+    context = {
+        'requests': requests,
+        'recruiter': recruiter,
+    }
+    return render(request, 'recruiter/recruiter_requests.html', context)

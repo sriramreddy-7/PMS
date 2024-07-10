@@ -2,12 +2,12 @@
 
 {% extends 'recruiter/base_recruiter.html' %}
 {% block title %}Edit Recruiter Profile{% endblock %}
-{% block brand %}Edit Recruiter Profile{% endblock %}
 {% block content %}
 <div class="content">
     <div class="container-fluid">
+        <br>
         <div class="row justify-content-center">
-            <div class="col-md-8">
+            <div class="col-md-12">
                 <div class="card">
                     <div class="card-body">
                         <form action="{% url 'edit_recruiter_profile' %}" method="post" enctype="multipart/form-data">
