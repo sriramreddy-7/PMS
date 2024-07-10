@@ -911,24 +911,19 @@ def send_request_to_recruiter(request, recruiter_id):
                 )
                 messages.success(request, 'Request sent successfully.')
             
-            return redirect('institute_dashboard')
+            return redirect('institute_recruiters')
         except RecruiterProfile.DoesNotExist:
             messages.error(request, 'Recruiter profile does not exist.')
-            return redirect('institute_dashboard')
+            return redirect('institute_recruiters')
         except InstituteProfile.DoesNotExist:
             messages.error(request, 'Institute profile does not exist.')
-            return redirect('institute_dashboard')
+            return redirect('institute_recruiters')
         except Exception as e:
             messages.error(request, f'An error occurred: {str(e)}')
-            return redirect('institute_dashboard')
+            return redirect('institute_recruiters')
     else:
         messages.error(request, 'Invalid request method.')
-        return redirect('institute_dashboard')
-
-    
-    
-    
-
+        return redirect('institute_recruiters')
 
 @login_required
 def institute_requests(request):
