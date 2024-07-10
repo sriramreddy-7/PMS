@@ -11,7 +11,7 @@
         <div class="col-md-4">
             <div class="card">
                 {% if student.profile_picture %}
-                    <img src="{{ student.profile_picture.url }}" class="card-img-top" alt="Profile Picture">
+                    <img src="{{ MEDIA_URL }}{{ student.profile_picture.url }}" class="card-img-top" alt="Profile Picture">
                 {% else %}
                     <img src="https://via.placeholder.com/150" class="card-img-top" alt="No Profile Picture">
                 {% endif %}
